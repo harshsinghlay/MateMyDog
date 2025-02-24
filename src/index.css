@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import './styles/animations.css';
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  body {
+    overscroll-behavior-y: contain;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent text selection */
+  * {
+    user-select: none;
+  }
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
