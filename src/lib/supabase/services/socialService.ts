@@ -1,6 +1,6 @@
 import { supabase } from "../../supabase";
 import type { CreatePostData } from "../../../types/social";
-import type { PostLike, SocialPost } from "../../../types/social";
+import type { SocialPost } from "../../../types/social";
 
 class SocialService {
   async createPost(data: CreatePostData) {
@@ -108,7 +108,8 @@ class SocialService {
         commentsCount: post.comments_count || 0,
         createdAt: post.created_at,
         isLiked: user
-          ? post.post_likes?.some((like) => like.user_id === user.id)
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            post.post_likes?.some((like: any) => like.user_id === user.id)
           : false,
       }));
     } catch (error) {
@@ -318,7 +319,8 @@ class SocialService {
         commentsCount: post.comments_count || 0,
         createdAt: post.created_at,
         isLiked: user
-          ? post.post_likes?.some((like: PostLike) => like.userId === user.id)
+          ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            post.post_likes?.some((like: any) => like.user_id === user.id)
           : false,
       }));
     } catch (error) {
