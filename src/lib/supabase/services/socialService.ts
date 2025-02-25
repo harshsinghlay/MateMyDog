@@ -1,5 +1,6 @@
 import { supabase } from "../../supabase";
 import type { CreatePostData } from "../../../types/social";
+import type { PostLike, SocialPost } from "../../../types/social";
 
 class SocialService {
   async createPost(data: CreatePostData) {
@@ -60,7 +61,11 @@ class SocialService {
     }
   }
 
-  async getPosts() {
+  async getPosts(
+    pageNum: number,
+    p0: number,
+    { offset, limit }: { offset: number; limit: number }
+  ): Promise<SocialPost[]> {
     try {
       const {
         data: { user },
@@ -82,7 +87,8 @@ class SocialService {
           )
         `
         )
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
 
       if (postsError) throw postsError;
       if (!posts) return [];
@@ -312,7 +318,7 @@ class SocialService {
         commentsCount: post.comments_count || 0,
         createdAt: post.created_at,
         isLiked: user
-          ? post.post_likes?.some((like) => like.user_id === user.id)
+          ? post.post_likes?.some((like: PostLike) => like.userId === user.id)
           : false,
       }));
     } catch (error) {

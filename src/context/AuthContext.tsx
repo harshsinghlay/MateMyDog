@@ -48,9 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data?.user) {
         toast.success("Please check your email to verify your account");
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error signing up:", error);
-      toast.error(error.message || "Signup failed. Please try again.");
+      toast.error("Signup failed. Please try again.");
       throw error;
     } finally {
       setIsLoading(false);
@@ -72,7 +73,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success("Welcome back! You are now signed in");
     } catch (error) {
       console.error("Error signing in:", error);
-      toast.error(error.message);
+      toast.error("Signin failed. Please try again.");
       throw error;
     } finally {
       setIsLoading(false);
@@ -88,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.success("Signed out successfully");
     } catch (error) {
       console.error("Error signing out:", error);
-      toast.error(error.message);
+      toast.error("Signout failed");
     } finally {
       setIsLoading(false);
     }
@@ -101,9 +102,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (result?.success) {
         toast.success(result.message);
       }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting password:", error);
-      toast.error(error.message || "Failed to reset password.");
+      toast.error("Failed to reset password.");
       throw error;
     } finally {
       setIsLoading(false);

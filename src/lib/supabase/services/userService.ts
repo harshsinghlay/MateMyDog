@@ -1,6 +1,7 @@
 import { supabase } from "../../supabase";
 import {User} from '../../../types/user';
 
+
 class UserService {
   async getUserInfo(userId: string): Promise<User> {
     try {

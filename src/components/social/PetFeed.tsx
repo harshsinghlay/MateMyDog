@@ -1,16 +1,17 @@
 import { useState, useRef, useEffect } from "react";
 import { PetFeedItem } from "./PetFeedItem";
-import { useSocialPosts } from "../../hooks/useSocialPosts";
 import { useSwipeable } from "react-swipeable";
+import { SocialPost } from "../../types/social";
 
 interface PetFeedProps {
+  posts: SocialPost[];
   onLike: (postId: string) => void;
   onComment: (postId: string, content: string) => void;
-  onDoubleTap: (postId: string) => void;
+  loadMorePosts: () => void;
+  hasMore: boolean;
 }
 
-export function PetFeed({ onLike, onComment }: PetFeedProps) {
-  const { posts } = useSocialPosts();
+export function PetFeed({ posts, onLike, onComment, loadMorePosts, hasMore }: PetFeedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -42,23 +43,28 @@ export function PetFeed({ onLike, onComment }: PetFeedProps) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentIndex]);
 
-  // Handle scroll snap
+  // Handle scroll snap and infinite loading
   useEffect(() => {
     const handleScroll = () => {
       if (feedRef.current) {
-        const scrollTop = feedRef.current.scrollTop;
-        const postHeight = feedRef.current.clientHeight;
+        const { scrollTop, scrollHeight, clientHeight } = feedRef.current;
+        const postHeight = clientHeight;
         const newIndex = Math.round(scrollTop / postHeight);
         setCurrentIndex(newIndex);
+
+        // Trigger loadMorePosts when near bottom
+        if (hasMore && scrollTop + clientHeight >= scrollHeight - 10) {
+          loadMorePosts();
+        }
       }
     };
+
     const feedElement = feedRef.current;
     if (feedElement) {
       feedElement.addEventListener("scroll", handleScroll);
       return () => feedElement.removeEventListener("scroll", handleScroll);
     }
-    
-  }, []);
+  }, [hasMore, loadMorePosts]);
 
   return (
     <div
@@ -76,6 +82,7 @@ export function PetFeed({ onLike, onComment }: PetFeedProps) {
           isActive={index === currentIndex}
         />
       ))}
+      {hasMore && <div className="p-4 text-center text-gray-500">Loading more posts...</div>}
     </div>
   );
 }

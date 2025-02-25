@@ -1,6 +1,4 @@
 import React from 'react';
-import { Heart, Stethoscope, Users } from 'lucide-react';
-
 export function Hero() {
   return (
     <div className="relative bg-white overflow-hidden">

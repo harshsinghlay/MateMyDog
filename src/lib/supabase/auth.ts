@@ -2,48 +2,94 @@ import { supabase } from "../supabase";
 import type { User } from "@supabase/supabase-js";
 
 export class AuthService {
+  //   async createAccount({
+  //     email,
+  //     password,
+  //     fullName,
+  //   }: {
+  //     email: string;
+  //     password: string;
+  //     fullName: string;
+  //   }) {
+  //     try {
+  //       // Try signing in first to check if the user exists
+  //       const { error: signInError } = await supabase.auth.signInWithPassword({
+  //         email,
+  //         password,
+  //       });
+
+  //       if (!signInError) {
+  //         throw new Error("User already exists. Please log in instead.");
+  //       }
+
+  //       // If sign-in fails, proceed with signup
+  //       const { data, error } = await supabase.auth.signUp({
+  //         email,
+  //         password,
+  //         options: {
+  //           data: {
+  //             fullName: fullName,
+  //           },
+  //         },
+  //       });
+
+  //       // **Fix: Prioritize errors over success messages**
+  //       if (error) {
+  //         throw error; // This ensures the error is handled before returning any response
+  //       }
+
+  //       return data; // Only return data if there's no error
+  //     } catch (error) {
+  //       console.error("AuthService :: createAccount :: error", error);
+  //       throw error; // This ensures the caller (AuthContext) correctly receives and handles the error
+  //     }
+  //   }
+
   async createAccount({
     email,
     password,
-    fullName
+    fullName,
   }: {
     email: string;
     password: string;
-    fullName : string;
+    fullName: string;
   }) {
     try {
-      // Try signing in first to check if the user exists
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      // Check if the user already exists
+      const { data: existingUser, error: fetchError } = await supabase
+        .from("profiles") // Supabase stores users in the auth.users system table
+        .select("id")
+        .eq("email", email)
+        .single();
 
-      if (!signInError) {
+      if (fetchError && fetchError.code !== "PGRST116") {
+        // PGRST116 means no matching record found, so it's safe to proceed
+        console.log("Error checking existing user: " + fetchError.message);
+      }
+
+      if (existingUser) {
         throw new Error("User already exists. Please log in instead.");
       }
 
-      // If sign-in fails, proceed with signup
-      const { data, error } = await supabase.auth.signUp(
-        {
-          email,
-          password,
-          options: {
-              data: {
-                fullName : fullName,
-              }
+      // Proceed with signup
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            fullName,
           },
-        }
-      );
+        },
+      });
 
-      // **Fix: Prioritize errors over success messages**
       if (error) {
-        throw error; // This ensures the error is handled before returning any response
+        throw new Error("Signup failed! Please try again.");
       }
 
       return data; // Only return data if there's no error
     } catch (error) {
       console.error("AuthService :: createAccount :: error", error);
-      throw error; // This ensures the caller (AuthContext) correctly receives and handles the error
+      throw error; // Ensures the caller correctly receives and handles the error
     }
   }
 

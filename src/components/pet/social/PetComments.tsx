@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { MessageCircle } from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
-import type { Pet } from '../../../types/pet';
+import { MessageCircle } from "lucide-react";
+import type { Pet } from "../../../types/pet";
 
 interface PetCommentsProps {
   pet: Pet;
@@ -10,23 +8,26 @@ interface PetCommentsProps {
   onShowComments: () => void;
 }
 
-export function PetComments({ pet, onComment, commentsCount, onShowComments }: PetCommentsProps) {
-  const { user, isAuthenticated } = useAuth();
-  const [comment, setComment] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export function PetComments({
+  commentsCount,
+  onShowComments,
+}: PetCommentsProps) {
+  //   const { user, isAuthenticated } = useAuth();
+  //   const [comment, setComment] = useState("");
+  //   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isAuthenticated || !user || !comment.trim() || isSubmitting) return;
+  //   const handleSubmit = async (e: React.FormEvent) => {
+  //     e.preventDefault();
+  //     if (!isAuthenticated || !user || !comment.trim() || isSubmitting) return;
 
-    try {
-      setIsSubmitting(true);
-      await onComment(comment.trim());
-      setComment('');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  //     try {
+  //       setIsSubmitting(true);
+  //       await onComment(comment.trim());
+  //       setComment("");
+  //     } finally {
+  //       setIsSubmitting(false);
+  //     }
+  //   };
 
   return (
     <div className="space-y-4">
@@ -41,7 +42,7 @@ export function PetComments({ pet, onComment, commentsCount, onShowComments }: P
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      {/* <form onSubmit={handleSubmit} className="space-y-3">
         <textarea
           value={comment}
           onChange={(e) => setComment(e.target.value)}
@@ -59,7 +60,7 @@ export function PetComments({ pet, onComment, commentsCount, onShowComments }: P
             {isSubmitting ? 'Posting...' : 'Post Comment'}
           </button>
         </div>
-      </form>
+      </form> */}
     </div>
   );
 }

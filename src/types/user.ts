@@ -4,10 +4,10 @@ export interface User {
   email: string;
   avatarUrl: string;
   address: {
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    postalCode?: string;
   };
 }
 

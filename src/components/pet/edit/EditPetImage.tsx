@@ -7,6 +7,7 @@ import type { Pet } from '../../../types/pet';
 
 interface EditPetImageProps {
   pet: Pet;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (field: keyof Pet, value: any) => void;
 }
 

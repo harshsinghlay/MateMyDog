@@ -5,7 +5,7 @@ import type { MedicalRecord } from "../../../types/pet";
 
 interface AddMedicalRecordProps {
   onClose: () => void;
-  onSave: (record: MedicalRecord) => void;
+  onSave: (record: MedicalRecord) => Promise<void>;
 }
 
 export function AddMedicalRecord({ onClose, onSave }: AddMedicalRecordProps) {

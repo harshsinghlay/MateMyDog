@@ -12,6 +12,7 @@ export const mockPetData: Pet = {
   dateOfBirth: '2022-01-15',
   weight: 25,
   microchipId: 'CHIP123456',
+  temperament : [],
   location: {
     address: '123 Pet Street',
     city: 'San Francisco',

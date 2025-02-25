@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { MatchingHero } from '../components/matching/MatchingHero';
 import { MatchingFilters } from '../components/matching/MatchingFilters';
 import { MatchingResults } from '../components/matching/MatchingResults';
@@ -7,7 +6,6 @@ import { useMatching } from '../hooks/useMatching';
 import type { MatchingFilters as FilterType } from '../types/matching';
 
 export function PetMatching() {
-  const navigate = useNavigate();
   const [filters, setFilters] = useState<FilterType>({
     breed: '',
     gender: '',

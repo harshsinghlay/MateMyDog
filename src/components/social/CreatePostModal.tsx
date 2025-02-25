@@ -15,7 +15,7 @@ interface CreatePostModalProps {
 export function CreatePostModal({ onClose, onSuccess }: CreatePostModalProps) {
   const { user } = useAuth();
   const { pets } = usePets();
-  const { uploadMedia, uploading } = useMediaUpload();
+  const { uploadMedia } = useMediaUpload();
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
   const [selectedPet, setSelectedPet] = useState<Pet | null>(null);

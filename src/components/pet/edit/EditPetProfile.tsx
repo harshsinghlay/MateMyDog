@@ -125,6 +125,7 @@ export function EditPetProfile({
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleInputChange = (field: keyof Pet, value: any) => {
     setFormData((prev) => ({
       ...prev,

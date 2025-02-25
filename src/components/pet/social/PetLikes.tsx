@@ -1,8 +1,8 @@
-import React, { useState, useCallback, memo } from 'react';
-import { Heart } from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
-import { useDebounce } from '../../../hooks/useDebounce';
-import type { Pet } from '../../../types/pet';
+import React, { useState, useCallback, memo } from "react";
+import { Heart } from "lucide-react";
+import { useAuth } from "../../../context/AuthContext";
+import { useDebounce } from "../../../hooks/useDebounce";
+import type { Pet } from "../../../types/pet";
 
 interface PetLikesProps {
   pet: Pet;
@@ -12,15 +12,16 @@ interface PetLikesProps {
   loading: boolean;
 }
 
-export const PetLikes = memo(function PetLikes({ 
-  onLike, 
+export const PetLikes = memo(function PetLikes({
+  onLike,
   likesCount: initialLikesCount,
   isLiked: initialIsLiked,
-  loading
+  loading,
 }: PetLikesProps) {
   const { isAuthenticated } = useAuth();
   const [optimisticIsLiked, setOptimisticIsLiked] = useState(initialIsLiked);
-  const [optimisticLikesCount, setOptimisticLikesCount] = useState(initialLikesCount);
+  const [optimisticLikesCount, setOptimisticLikesCount] =
+    useState(initialLikesCount);
 
   // Reset optimistic state when props change
   React.useEffect(() => {
@@ -34,25 +35,28 @@ export const PetLikes = memo(function PetLikes({
       // Revert optimistic updates on error
       setOptimisticIsLiked(initialIsLiked);
       setOptimisticLikesCount(initialLikesCount);
-    }
+    },
   });
 
-  const handleLike = useCallback(async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (!isAuthenticated) return;
+  const handleLike = useCallback(
+    async (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
 
-    // Optimistically update UI
-    setOptimisticIsLiked(prev => !prev);
-    setOptimisticLikesCount(prev => prev + (optimisticIsLiked ? -1 : 1));
+      if (!isAuthenticated) return;
 
-    try {
-      await debouncedLike();
-    } catch (error) {
-      console.error('Error liking:', error);
-    }
-  }, [isAuthenticated, optimisticIsLiked, debouncedLike]);
+      // Optimistically update UI
+      setOptimisticIsLiked((prev) => !prev);
+      setOptimisticLikesCount((prev) => prev + (optimisticIsLiked ? -1 : 1));
+
+      try {
+        await debouncedLike();
+      } catch (error) {
+        console.error("Error liking:", error);
+      }
+    },
+    [isAuthenticated, optimisticIsLiked, debouncedLike]
+  );
 
   // Return empty div while loading instead of shimmer effect
   if (loading) {
@@ -65,19 +69,19 @@ export const PetLikes = memo(function PetLikes({
         onClick={handleLike}
         disabled={!isAuthenticated}
         className={`group flex items-center space-x-1 px-3 py-1 rounded-full 
-          ${optimisticIsLiked 
-            ? 'text-rose-600 bg-rose-50' 
-            : 'text-gray-600 bg-gray-50 hover:bg-gray-100'
+          ${
+            optimisticIsLiked
+              ? "text-rose-600 bg-rose-50"
+              : "text-gray-600 bg-gray-50 hover:bg-gray-100"
           } transition-colors duration-200 disabled:opacity-50`}
       >
-        <Heart 
-          className={`h-4 w-4 ${optimisticIsLiked ? 'fill-current' : ''}`} 
+        <Heart
+          className={`h-4 w-4 ${optimisticIsLiked ? "fill-current" : ""}`}
         />
-        <span className="text-sm font-medium">{optimisticLikesCount}</span>
       </button>
       {optimisticLikesCount > 0 && (
         <span className="text-sm text-gray-500">
-          {optimisticLikesCount} {optimisticLikesCount === 1 ? 'like' : 'likes'}
+          {optimisticLikesCount} {optimisticLikesCount === 1 ? "like" : "likes"}
         </span>
       )}
     </div>

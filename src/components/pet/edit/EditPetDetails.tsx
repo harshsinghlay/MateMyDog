@@ -106,6 +106,7 @@ export function EditPetDetails({ pet, onChange }: EditPetDetailsProps) {
                 name: temp,
               })) || []
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             onChange={(selected: any[]) =>
               onChange(
                 "temperament",

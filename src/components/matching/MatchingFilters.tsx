@@ -12,6 +12,7 @@ interface MatchingFiltersProps {
 }
 
 export function MatchingFilters({ filters, onFilterChange }: MatchingFiltersProps) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (key: keyof FilterType, value: any) => {
     onFilterChange({ ...filters, [key]: value });
   };

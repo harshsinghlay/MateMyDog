@@ -15,6 +15,8 @@ export function SocialFeed() {
     refresh: loadPosts,
     likePost,
     commentPost,
+    loadMorePosts,
+    hasMore
   } = useSocialPosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -79,9 +81,11 @@ export function SocialFeed() {
         </div>
       ) : (
         <PetFeed
+        posts={posts}
           onLike={handleLike}
-          onDoubleTap={handleLike}
           onComment={commentPost}
+          loadMorePosts={loadMorePosts}
+          hasMore={hasMore}
         />
       )}
 

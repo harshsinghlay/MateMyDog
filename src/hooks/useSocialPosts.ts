@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
@@ -11,19 +12,27 @@ export function useSocialPosts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [likeQueue, setLikeQueue] = useState<Record<string, number>>({});
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const loadPosts = async () => {
-    // if (!isAuthenticated) {
-    //   setPosts([]);
-    //   setLoading(false);
-    //   return;
-    // }
+  const POSTS_PER_PAGE = 10; // Number of posts per request
 
+  const loadPosts = async (pageNum = 1) => {
     try {
       setLoading(true);
       setError(null);
-      const data = await socialService.getPosts();
-      setPosts(data);
+
+      const offset = (pageNum - 1) * POSTS_PER_PAGE;
+      const limit = POSTS_PER_PAGE;
+
+      // Pass all three expected arguments
+      const data = await socialService.getPosts(pageNum, POSTS_PER_PAGE, {
+        offset,
+        limit,
+      });
+
+      setPosts((prev) => (pageNum === 1 ? data : [...prev, ...data])); // Append new posts
+      setHasMore(data.length === POSTS_PER_PAGE); // If less than 10, no more data
     } catch (err) {
       console.error("Error loading posts:", err);
       setError(err instanceof Error ? err : new Error("Failed to load posts"));
@@ -37,7 +46,14 @@ export function useSocialPosts() {
     loadPosts();
   }, [isAuthenticated]);
 
-  // Create a debounced version of the like API call
+  const loadMorePosts = () => {
+    if (hasMore && !loading) {
+      setPage((prev) => prev + 1);
+      loadPosts(page + 1);
+    }
+  };
+
+  // Debounced like API call
   const { execute: debouncedLikePost } = useDebounce(
     async (postId: string): Promise<boolean> => {
       const result = await socialService.likePost(postId);
@@ -62,81 +78,64 @@ export function useSocialPosts() {
 
       if (!post) return;
 
-      // Check if enough time has passed since the last like
       if (currentTime - lastLikeTime < 500) {
         return; // Ignore rapid clicks
       }
 
       try {
-        // Update like queue
         setLikeQueue((prev) => ({ ...prev, [postId]: currentTime }));
 
-        // Store the current state for potential rollback
         const originalState = {
           likesCount: post.likesCount,
           isLiked: post.isLiked,
         };
 
-        // Optimistically update UI
         setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              const newLikesCount = p.isLiked
-                ? Math.max(0, p.likesCount - 1)
-                : p.likesCount + 1;
-              return {
-                ...p,
-                likesCount: newLikesCount,
-                isLiked: !p.isLiked,
-              };
-            }
-            return p;
-          })
+          prev.map((p) =>
+            p.id === postId
+              ? {
+                  ...p,
+                  likesCount: p.isLiked ? p.likesCount - 1 : p.likesCount + 1,
+                  isLiked: !p.isLiked,
+                }
+              : p
+          )
         );
 
-        // Make debounced API call
         const isLiked = (await debouncedLikePost(postId)) as boolean;
 
-        // Update UI based on actual result if needed
         setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              // Ensure likes count never goes below 0
-              const newLikesCount = isLiked
-                ? originalState.likesCount + 1
-                : Math.max(0, originalState.likesCount - 1);
-              return {
-                ...p,
-                likesCount: newLikesCount,
-                isLiked: isLiked,
-              };
-            }
-            return p;
-          })
+          prev.map((p) =>
+            p.id === postId
+              ? {
+                  ...p,
+                  likesCount: isLiked
+                    ? originalState.likesCount + 1
+                    : Math.max(0, originalState.likesCount - 1),
+                  isLiked,
+                }
+              : p
+          )
         );
 
-        // Clear from queue after successful update
         setLikeQueue((prev) => {
           const newQueue = { ...prev };
           delete newQueue[postId];
           return newQueue;
         });
       } catch (error) {
-        // Revert to original state on error
         setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              return {
-                ...p,
-                likesCount: Math.max(0, post.likesCount),
-                isLiked: post.isLiked,
-              };
-            }
-            return p;
-          })
+          prev.map((p) =>
+            p.id === postId
+              ? {
+                  ...p,
+                  likesCount: Math.max(0, post.likesCount),
+                  isLiked: post.isLiked,
+                }
+              : p
+          )
         );
 
-        // Clear from queue
         setLikeQueue((prev) => {
           const newQueue = { ...prev };
           delete newQueue[postId];
@@ -148,30 +147,25 @@ export function useSocialPosts() {
   );
 
   const commentPost = useCallback(
-    async (postId: string, content: string) => {
+    async (postId: string) => {
       if (!isAuthenticated) return;
-
       try {
         setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              return { ...p, commentsCount: p.commentsCount + 1 };
-            }
-            return p;
-          })
+          prev.map((p) =>
+            p.id === postId ? { ...p, commentsCount: p.commentsCount + 1 } : p
+          )
         );
 
-        //   await socialService.addComment(postId, content);
+        // await socialService.addComment(postId, content);
       } catch (error) {
         console.error("Error commenting on post:", error);
         toast.error("Failed to add comment");
         setPosts((prev) =>
-          prev.map((p) => {
-            if (p.id === postId) {
-              return { ...p, commentsCount: Math.max(0, p.commentsCount - 1) };
-            }
-            return p;
-          })
+          prev.map((p) =>
+            p.id === postId
+              ? { ...p, commentsCount: Math.max(0, p.commentsCount - 1) }
+              : p
+          )
         );
       }
     },
@@ -182,8 +176,10 @@ export function useSocialPosts() {
     posts,
     loading,
     error,
-    refresh: loadPosts,
+    refresh: () => loadPosts(1),
     likePost,
     commentPost,
+    loadMorePosts,
+    hasMore,
   };
 }

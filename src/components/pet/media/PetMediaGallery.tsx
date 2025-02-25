@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Image as ImageIcon, Video } from 'lucide-react';
-import { useAuth } from '../../../context/AuthContext';
+import { Plus, Video } from 'lucide-react';
 import { AddMedia } from './AddMedia';
 import { MediaViewer } from './MediaViewer';
 import type { Pet, PetMedia } from '../../../types/pet';

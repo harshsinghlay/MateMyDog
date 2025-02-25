@@ -30,6 +30,7 @@ export class PetService {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async fromDbFormat(dbPet: any): Promise<Pet> {
     if (!dbPet) throw new Error("Invalid pet data");
 

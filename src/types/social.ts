@@ -30,6 +30,12 @@ export interface PostComment {
   content: string;
   createdAt: string;
 }
+export interface PostLike {
+  id: string;
+  postId: string;
+  userId: string;
+  createdAt: string;
+}
 
 export interface CreatePostData {
   petId: string;

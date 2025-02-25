@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2, Music2 } from 'lucide-react';
-import type { PetPost } from '../../../types/pet';
+import React, { useState } from "react";
+import { Heart, MessageCircle, Share2, Music2 } from "lucide-react";
+import type { SocialPost } from "../../../types/social";
 
 interface PetFeedItemProps {
-  post: PetPost;
+  post: SocialPost;
   onLike: (postId: string) => void;
   isActive: boolean;
 }
 
-export function PetFeedItem({ post, onLike, isActive }: PetFeedItemProps) {
+export function PetFeedItem({ post, onLike }: PetFeedItemProps) {
   const [isDoubleTapped, setIsDoubleTapped] = useState(false);
   const [lastTap, setLastTap] = useState(0);
 
@@ -27,15 +27,15 @@ export function PetFeedItem({ post, onLike, isActive }: PetFeedItemProps) {
   };
 
   return (
-    <div 
+    <div
       className="relative h-screen w-full snap-start touch-manipulation"
       onClick={handleTap}
     >
       {/* Media Content */}
       <div className="absolute inset-0 bg-black">
         <img
-          src={post.mediaUrl}
-          alt={post.caption}
+          src={post?.imageUrl}
+          alt={post?.storyText}
           className="w-full h-full object-cover"
           loading="lazy"
         />
@@ -60,24 +60,28 @@ export function PetFeedItem({ post, onLike, isActive }: PetFeedItemProps) {
               loading="lazy"
             />
             <div>
-              <h3 className="text-white font-semibold text-base">{post.petName}</h3>
+              <h3 className="text-white font-semibold text-base">
+                {post.petName}
+              </h3>
               <p className="text-white/80 text-sm">{post.ownerName}</p>
             </div>
           </div>
 
           {/* Caption */}
-          <p className="text-white text-sm line-clamp-2">{post.caption}</p>
+          <p className="text-white text-sm line-clamp-2">{post?.storyText}</p>
 
           {/* Music */}
           <div className="flex items-center space-x-2">
             <Music2 className="h-4 w-4 text-white animate-spin-slow" />
-            <p className="text-white text-sm truncate">{post.music}</p>
+            <p className="text-white text-sm truncate">
+              {"Let me Down Slowly"}
+            </p>
           </div>
         </div>
 
         {/* Engagement Buttons */}
         <div className="absolute right-2 bottom-20 flex flex-col items-center space-y-4">
-          <button 
+          <button
             onClick={(e) => {
               e.stopPropagation();
               onLike(post.id);
@@ -87,21 +91,21 @@ export function PetFeedItem({ post, onLike, isActive }: PetFeedItemProps) {
             <div className="w-12 h-12 bg-black/40 rounded-full flex items-center justify-center mb-1 group-active:scale-90 transition-transform">
               <Heart className="h-6 w-6 text-white group-active:text-red-500" />
             </div>
-            <span className="text-white text-xs">{post.likes}</span>
+            <span className="text-white text-xs">{post?.likesCount}</span>
           </button>
 
           <button className="group flex flex-col items-center">
             <div className="w-12 h-12 bg-black/40 rounded-full flex items-center justify-center mb-1 group-active:scale-90 transition-transform">
               <MessageCircle className="h-6 w-6 text-white" />
             </div>
-            <span className="text-white text-xs">{post.comments}</span>
+            <span className="text-white text-xs">{post?.commentsCount}</span>
           </button>
 
           <button className="group flex flex-col items-center">
             <div className="w-12 h-12 bg-black/40 rounded-full flex items-center justify-center mb-1 group-active:scale-90 transition-transform">
               <Share2 className="h-6 w-6 text-white" />
             </div>
-            <span className="text-white text-xs">{post.shares}</span>
+            {/* <span className="text-white text-xs">{post.shares}</span> */}
           </button>
         </div>
       </div>

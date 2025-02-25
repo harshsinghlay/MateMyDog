@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, Image as ImageIcon, Video } from 'lucide-react';
+import { X, Upload, Video } from 'lucide-react';
 import type { PetMedia } from '../../../types/pet';
 
 interface AddMediaProps {

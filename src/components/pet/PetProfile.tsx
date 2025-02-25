@@ -1,9 +1,8 @@
-
-import React from 'react';
-import type { Pet } from '../../types/pet';
-import { PetHeader } from './PetHeader';
-import { PetDetails } from './PetDetails';
-import { PetSocial } from './social/PetSocial';
+import React from "react";
+import type { Pet } from "../../types/pet";
+import { PetHeader } from "./PetHeader";
+import { PetDetails } from "./PetDetails";
+import { PetSocial } from "./social/PetSocial";
 
 interface PetProfileProps {
   pet: Pet;
@@ -13,7 +12,8 @@ interface PetProfileProps {
 export function PetProfile({ pet, isOwner }: PetProfileProps) {
   return (
     <div className="space-y-6">
-      <PetHeader 
+      <PetHeader
+        isOwner={isOwner}
         pet={pet}
         onEdit={() => {}}
         onShare={() => {}}
@@ -23,10 +23,12 @@ export function PetProfile({ pet, isOwner }: PetProfileProps) {
           <PetDetails pet={pet} />
         </div>
         <div className="lg:col-span-2">
-          <PetSocial 
+          <PetSocial
             pet={pet}
             onLike={async () => {}}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onReview={async (rating: number, comment: string) => {}}
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onComment={async (content: string) => {}}
           />
         </div>

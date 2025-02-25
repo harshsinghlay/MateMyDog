@@ -1,13 +1,8 @@
 import React from 'react';
-import { Bell, Mail, Globe, Lock } from 'lucide-react';
-import type { User } from '../../types/user';
 
-interface UserSettingsProps {
-  user: User;
-}
 
-export function UserSettings({ user }: UserSettingsProps) {
-  const preferences = user.preferences || {
+export function UserSettings() {
+  const preferences =  {
     emailNotifications: true,
     pushNotifications: true,
     matchingAlerts: true,

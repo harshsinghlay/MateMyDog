@@ -1,5 +1,5 @@
 import React from 'react';
-import { Edit, Share2, Trash2 } from 'lucide-react';
+import { Edit, Share2 } from 'lucide-react';
 import type { Pet } from '../../types/pet';
 
 interface PetHeaderProps {
@@ -7,10 +7,9 @@ interface PetHeaderProps {
   isOwner: boolean;
   onEdit: () => void;
   onShare: () => void;
-  onDelete: () => void;
 }
 
-export function PetHeader({ pet, isOwner, onEdit, onShare, onDelete }: PetHeaderProps) {
+export function PetHeader({ pet, isOwner, onEdit, onShare }: PetHeaderProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm p-8">
       <div className="flex flex-col md:flex-row md:items-center md:space-x-8">
