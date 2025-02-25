@@ -2,7 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './styles/animations.css';
+@import "./styles/animations.css";
+
+* {
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
 
 /* Mobile-specific styles */
 @media (max-width: 640px) {
@@ -24,6 +31,6 @@
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
