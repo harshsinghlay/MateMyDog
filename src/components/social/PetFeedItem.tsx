@@ -7,8 +7,6 @@ import type { Pet } from "../../types/pet";
 import { CommentsModal } from "./CommentsModal";
 import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-hot-toast";
-
-
 interface PetFeedItemProps {
   post: SocialPost;
   onLike: (postId: string) => void;
@@ -100,7 +98,7 @@ const PetFeedItem = memo(function PetFeedItem({
   );
 
   return (
-    <div className="relative h-[calc(100vh-4rem)] w-full snap-start touch-manipulation">
+    <div className="relative h-full w-full snap-start touch-manipulation">
       <div className="absolute inset-0 bg-black" onClick={handleTap}>
         <img
           src={post.imageUrl}
@@ -112,7 +110,7 @@ const PetFeedItem = memo(function PetFeedItem({
 
       {/* Overlay Content */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60">
-        <div className="absolute bottom-0 left-0 right-16 p-4 pb-24 md:pb-4 space-y-4">
+        <div className="absolute bottom-0 left-0 right-16 p-4 space-y-4">
           {/* Pet Info */}
           <div className="flex items-center space-x-3">
             <img
@@ -141,7 +139,7 @@ const PetFeedItem = memo(function PetFeedItem({
           </div>
         </div>
 
-        <div className="absolute right-2 bottom-24 flex flex-col items-center space-y-4">
+        <div className="absolute right-2 bottom-4 md:bottom-24 flex flex-col items-center space-y-4">
           <button
             onClick={(e) => {
               e.stopPropagation();

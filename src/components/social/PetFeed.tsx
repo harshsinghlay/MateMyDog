@@ -70,7 +70,7 @@ export function PetFeed({ posts, onLike, onComment, loadMorePosts, hasMore }: Pe
     <div
       {...handlers}
       ref={feedRef}
-      className="h-[calc(100vh-4rem)] overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar"
+      className="h-[calc(100vh-4rem)] md:h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar"
       style={{ touchAction: "pan-y" }}
     >
       {posts.map((post, index) => (
