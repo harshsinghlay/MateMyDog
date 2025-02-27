@@ -65,19 +65,18 @@ const PetFeedItem = memo(function PetFeedItem({
       toast("Please sign in to like posts", { icon: "🔒" });
       return;
     }
-    console.log("handleLike of PetFeedItem");
     setIsLiked((prev) => !prev);
     setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
     debouncedLike(post.id);
   }, [isLiked, post.id, debouncedLike, isAuthenticated]);
 
-  const handleCommentClick = () =>{
+  const handleCommentClick = () => {
     if (!isAuthenticated) {
       toast("Please sign in to comment", { icon: "🔒" });
       return;
     }
     setIsCommentOpen(true);
-  }
+  };
 
   const handleTap = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -197,7 +196,11 @@ const PetFeedItem = memo(function PetFeedItem({
 
       {/* Share Modal */}
       {showShare && (
-        <SharePetProfile pet={mockPet} postId={post.id} onClose={() => setShowShare(false)} />
+        <SharePetProfile
+          pet={mockPet}
+          postId={post.id}
+          onClose={() => setShowShare(false)}
+        />
       )}
     </div>
   );

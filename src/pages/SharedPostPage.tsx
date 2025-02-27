@@ -43,9 +43,7 @@ export function SharedPostPage() {
         setShowAuthModal(true);
         return;
       }
-      console.log("handleLike of SocialFeed");
       if (likeInProgress[postId]) return;
-
       setLikeInProgress((prev) => ({ ...prev, [postId]: true }));
       await likePost(postId);
       setLikeInProgress((prev) => ({ ...prev, [postId]: false }));

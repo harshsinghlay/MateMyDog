@@ -29,9 +29,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const currentUser = await authService.getCurrentUser();
         if (currentUser) {
+          setIsAuthenticated(true);
           const userInfo = await userService.getUserInfo(currentUser.id);
           setUser({ ...currentUser, ...userInfo });
-          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -44,11 +44,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (email: string, password: string, fullName: string) => {
     setIsLoading(true);
     try {
-      const data = await authService.createAccount({ email, password , fullName });
+      const data = await authService.createAccount({
+        email,
+        password,
+        fullName,
+      });
       if (data?.user) {
         toast.success("Please check your email to verify your account");
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error signing up:", error);
       toast.error("Signup failed. Please try again.");
@@ -102,7 +106,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (result?.success) {
         toast.success(result.message);
       }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.error("Error resetting password:", error);
       toast.error("Failed to reset password.");
