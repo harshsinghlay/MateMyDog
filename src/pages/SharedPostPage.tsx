@@ -74,7 +74,7 @@ export function SharedPostPage() {
 
   return (
     <div>
-      <div className="w-full">
+      <div className="w-full h-[91vh] md:h-[calc(100vh-4rem)]">
         <PetFeedItem
           post={post}
           onLike={handleLike}
