@@ -64,7 +64,7 @@ export function SocialFeed() {
   }
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-[91vh] md:h-[calc(100vh-4rem)] ">
       {loading ? (
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>

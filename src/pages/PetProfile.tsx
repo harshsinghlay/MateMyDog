@@ -164,7 +164,7 @@ export function PetProfile() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen ">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -180,7 +180,8 @@ export function PetProfile() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="pb-16 md:pb-0">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
       <PetHeader
         pet={pet}
         isOwner={isOwner}
@@ -247,6 +248,7 @@ export function PetProfile() {
           </div>
         </div>
       )} */}
+    </div>
     </div>
   );
 }

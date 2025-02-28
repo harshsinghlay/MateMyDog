@@ -34,7 +34,7 @@ export function PetsPage() {
   };
 
   return (
-    <div>
+    <div className="pb-16 md:pb-0">
       {/* <ProductGrid /> */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <h2 className="text-2xl font-serif font-semibold mb-8">Your Pets</h2>
