@@ -65,7 +65,7 @@ export function CommentsModal({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg w-full max-w-lg h-[80vh] flex flex-col">
+      <div className="bg-white rounded-lg w-full max-w-lg h-[80dvh] flex flex-col">
         <div className="p-4 border-b flex items-center justify-between">
           <h2 className="text-lg font-medium">Comments</h2>
           <button

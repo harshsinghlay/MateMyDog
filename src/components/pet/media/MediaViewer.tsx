@@ -42,13 +42,13 @@ export function MediaViewer({ media, onClose, onNext, onPrevious }: MediaViewerP
           <video
             src={media.url}
             controls
-            className="w-full max-h-[80vh] object-contain"
+            className="w-full max-h-[80dvh] object-contain"
           />
         ) : (
           <img
             src={media.url}
             alt={media.caption || ''}
-            className="w-full max-h-[80vh] object-contain"
+            className="w-full max-h-[80dvh] object-contain"
           />
         )}
 

@@ -43,7 +43,7 @@ export function SocialFeed() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center h-[91vh] md:h-[calc(100vh-4rem)]">
+      <div className="flex flex-col items-center justify-center h-full">
         <h2 className="text-2xl font-serif mb-4">Welcome to Pet Social</h2>
         <p className="text-gray-600 mb-8 text-center max-w-md">
           Connect with other pet owners, share moments, and discover amazing
@@ -64,7 +64,7 @@ export function SocialFeed() {
   }
 
   return (
-    <div className="relative w-full h-[91vh] md:h-[calc(100vh-4rem)] ">
+    <div className="relative w-full h-full">
       {loading ? (
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>

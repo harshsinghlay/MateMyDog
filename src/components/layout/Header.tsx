@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import { UserCircle2, Menu, X } from 'lucide-react';
-import { Logo } from '../ui/Logo';
-import { NavLink } from '../ui/NavLink';
-import { AuthModal } from '../auth/AuthModal';
-import { UserAvatar } from '../ui/UserAvatar';
-import { useAuth } from '../../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { UserCircle2, Menu, X } from "lucide-react";
+import { Logo } from "../ui/Logo";
+import { NavLink } from "../ui/NavLink";
+import { AuthModal } from "../auth/AuthModal";
+import { UserAvatar } from "../ui/UserAvatar";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // External URLs
 const EXTERNAL_URLS = {
   products: "https://www.tiltingheads.com/",
   blog: "https://www.tiltingheads.com/blogs/latest-blogs",
-  contact: "https://www.tiltingheads.com/pages/contact"
+  contact: "https://www.tiltingheads.com/pages/contact",
 };
 
 export function Header() {
@@ -21,12 +21,12 @@ export function Header() {
   const navigate = useNavigate();
 
   const navItems = [
-    { label: 'Home', href: '/' },
-    { label: 'Products', href: EXTERNAL_URLS.products, isExternal: true },
-    { label: 'Pet Matching', href: '/matching' },
-    { label: 'Pets', href: '/pets' },
-    { label: 'Blog', href: EXTERNAL_URLS.blog, isExternal: true },
-    { label: 'Contact', href: EXTERNAL_URLS.contact, isExternal: true }
+    { label: "Home", href: "/" },
+    { label: "Products", href: EXTERNAL_URLS.products, isExternal: true },
+    { label: "Pet Matching", href: "/matching" },
+    { label: "Pets", href: "/pets" },
+    { label: "Blog", href: EXTERNAL_URLS.blog, isExternal: true },
+    { label: "Contact", href: EXTERNAL_URLS.contact, isExternal: true },
   ];
 
   const handleSignOut = async () => {
@@ -35,7 +35,7 @@ export function Header() {
     setIsMobileMenuOpen(false);
   };
 
-  const renderNavItem = (item: typeof navItems[0]) => {
+  const renderNavItem = (item: (typeof navItems)[0]) => {
     if (item.isExternal) {
       return (
         <a
@@ -63,11 +63,11 @@ export function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-100 z-50 h-16">
+    <header className=" bg-white h-fit border-b border-gray-100 z-50 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center py-4">
           <Logo />
-          
+
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navItems.map(renderNavItem)}
@@ -81,7 +81,7 @@ export function Header() {
                   <UserAvatar user={user} size="sm" />
                 </button>
                 <div className="absolute right-0 w-40 mt-2 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                  <button 
+                  <button
                     onClick={() => navigate("/profile")}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-t-lg"
                   >
@@ -161,7 +161,10 @@ export function Header() {
         </div>
       )}
 
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+      />
     </header>
   );
 }

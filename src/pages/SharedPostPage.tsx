@@ -53,7 +53,7 @@ export function SharedPostPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center ">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -61,7 +61,7 @@ export function SharedPostPage() {
 
   if (!post) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col items-center justify-center  p-4">
         <h2 className="text-2xl font-medium text-gray-900 mb-2">
           Post Not Found
         </h2>
@@ -73,8 +73,8 @@ export function SharedPostPage() {
   }
 
   return (
-    <div>
-      <div className="w-full h-[91vh] md:h-[calc(100vh-4rem)]">
+    <div className="h-full">
+      <div className="w-full h-full">
         <PetFeedItem
           post={post}
           onLike={handleLike}

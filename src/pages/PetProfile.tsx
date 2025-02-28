@@ -164,7 +164,7 @@ export function PetProfile() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen ">
+      <div className="flex items-center justify-center  ">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
       </div>
     );
@@ -172,7 +172,7 @@ export function PetProfile() {
 
   if (error || !pet) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center justify-center ">
         <p className="text-red-600 mb-4">{error?.message || "Pet not found"}</p>
         <Navigate to="/" replace />
       </div>
@@ -181,48 +181,48 @@ export function PetProfile() {
 
   return (
     <div className="pb-16 md:pb-0">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
-      <PetHeader
-        pet={pet}
-        isOwner={isOwner}
-        onEdit={() => setIsEditing(true)}
-        onShare={() => setIsSharing(true)}
-      />
-      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <div className="lg:col-span-1">
-          <PetDetails pet={pet} />
-        </div>
-        <div className="lg:col-span-2 space-y-8">
-          <PetSocial
-            pet={pet}
-            onLike={handleLike}
-            onReview={handleReview}
-            onComment={handleComment}
-          />
-          <PetMedicalHistory
-            records={pet.medicalHistory}
-            onAddRecord={handleAddMedicalRecord}
-          />
-          <PetVaccinations
-            vaccinations={pet.vaccinations}
-            onAddVaccination={handleAddVaccination}
-          />
-        </div>
-      </div>
-
-      {isEditing && (
-        <EditPetProfile
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
+        <PetHeader
           pet={pet}
-          onClose={() => setIsEditing(false)}
-          onSave={handleUpdatePet}
+          isOwner={isOwner}
+          onEdit={() => setIsEditing(true)}
+          onShare={() => setIsSharing(true)}
         />
-      )}
+        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-1">
+            <PetDetails pet={pet} />
+          </div>
+          <div className="lg:col-span-2 space-y-8">
+            <PetSocial
+              pet={pet}
+              onLike={handleLike}
+              onReview={handleReview}
+              onComment={handleComment}
+            />
+            <PetMedicalHistory
+              records={pet.medicalHistory}
+              onAddRecord={handleAddMedicalRecord}
+            />
+            <PetVaccinations
+              vaccinations={pet.vaccinations}
+              onAddVaccination={handleAddVaccination}
+            />
+          </div>
+        </div>
 
-      {isSharing && (
-        <SharePetProfile pet={pet} onClose={() => setIsSharing(false)} />
-      )}
+        {isEditing && (
+          <EditPetProfile
+            pet={pet}
+            onClose={() => setIsEditing(false)}
+            onSave={handleUpdatePet}
+          />
+        )}
 
-      {/* {showDeleteConfirm && (
+        {isSharing && (
+          <SharePetProfile pet={pet} onClose={() => setIsSharing(false)} />
+        )}
+
+        {/* {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Delete Pet</h3>
@@ -248,7 +248,7 @@ export function PetProfile() {
           </div>
         </div>
       )} */}
-    </div>
+      </div>
     </div>
   );
 }

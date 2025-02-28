@@ -3,17 +3,17 @@ import { Routes, Route } from "react-router-dom";
 import { PetsPage } from "./pages/PetsPage";
 import { PetProfile } from "./pages/PetProfile";
 import { PetMatching } from "./pages/PetMatching";
-import { HomePage } from "./pages/HomePage";
 import { UserProfilePage } from "./pages/UserProfilePage";
 import { AuthCallback } from "./pages/AuthCallback";
 import { UpdatePassword } from "./pages/UpdatePassword";
 import { SharedPostPage } from "./pages/SharedPostPage";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
+import { SocialFeed } from "./components/social/SocialFeed";
 
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<SocialFeed />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/update-password" element={<UpdatePassword />} />
       <Route path="/socialPost/:id" element={<SharedPostPage />} />

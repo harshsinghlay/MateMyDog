@@ -56,7 +56,7 @@ export function UpdatePassword() {
 
       toast.success("Password updated successfully");
       navigate("/");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setError("An unexpected error occurred. Please try again.");
     } finally {
@@ -65,7 +65,7 @@ export function UpdatePassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className=" flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-8 relative">
         {/* Close button */}
         <button
