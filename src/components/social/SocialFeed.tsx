@@ -16,7 +16,7 @@ export function SocialFeed() {
     likePost,
     commentPost,
     loadMorePosts,
-    hasMore
+    hasMore,
   } = useSocialPosts();
   const [showCreatePost, setShowCreatePost] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -43,7 +43,7 @@ export function SocialFeed() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[80vh]">
+      <div className="flex flex-col items-center justify-center h-[91vh] md:h-[calc(100vh-4rem)]">
         <h2 className="text-2xl font-serif mb-4">Welcome to Pet Social</h2>
         <p className="text-gray-600 mb-8 text-center max-w-md">
           Connect with other pet owners, share moments, and discover amazing
@@ -81,7 +81,7 @@ export function SocialFeed() {
         </div>
       ) : (
         <PetFeed
-        posts={posts}
+          posts={posts}
           onLike={handleLike}
           onComment={commentPost}
           loadMorePosts={loadMorePosts}

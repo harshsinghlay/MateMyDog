@@ -73,7 +73,7 @@ export function SharedPostPage() {
   }
 
   return (
-    <div >
+    <div>
       <div className="w-full">
         <PetFeedItem
           post={post}
