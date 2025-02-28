@@ -11,7 +11,13 @@ interface PetFeedProps {
   hasMore: boolean;
 }
 
-export function PetFeed({ posts, onLike, onComment, loadMorePosts, hasMore }: PetFeedProps) {
+export function PetFeed({
+  posts,
+  onLike,
+  onComment,
+  loadMorePosts,
+  hasMore,
+}: PetFeedProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const feedRef = useRef<HTMLDivElement>(null);
 
@@ -70,7 +76,7 @@ export function PetFeed({ posts, onLike, onComment, loadMorePosts, hasMore }: Pe
     <div
       {...handlers}
       ref={feedRef}
-      className="h-[calc(100vh-4rem)] md:h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar"
+      className="h-[calc(100dvh-4rem)] md:h-full overflow-y-scroll snap-y snap-mandatory scroll-smooth hide-scrollbar"
       style={{ touchAction: "pan-y" }}
     >
       {posts.map((post, index) => (
@@ -82,7 +88,11 @@ export function PetFeed({ posts, onLike, onComment, loadMorePosts, hasMore }: Pe
           isActive={index === currentIndex}
         />
       ))}
-      {hasMore && <div className="p-4 text-center text-gray-500">Loading more posts...</div>}
+      {hasMore && (
+        <div className="p-4 text-center text-gray-500">
+          Loading more posts...
+        </div>
+      )}
     </div>
   );
 }
