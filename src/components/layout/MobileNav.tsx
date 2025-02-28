@@ -33,7 +33,7 @@ export function MobileNav() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-40">
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-40 h-16">
         <div className="flex items-center justify-around h-16">
           <button
             onClick={() => navigate("/")}
