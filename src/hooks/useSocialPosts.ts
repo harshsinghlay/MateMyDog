@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { socialService } from "../lib/supabase/services/socialService";
@@ -14,16 +14,29 @@ export function useSocialPosts() {
   const [likeQueue, setLikeQueue] = useState<Record<string, number>>({});
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const isLoadingMore = useRef(false);
+  const loadingPageRef = useRef(0);
 
   const POSTS_PER_PAGE = 10; // Number of posts per request
 
-  const loadPosts = async (pageNum = 1) => {
+  const loadPosts = useCallback(async (pageNum = 1, append = pageNum > 1) => {
+    // Prevent duplicate loading of the same page
+    if (loadingPageRef.current === pageNum) return;
+
     try {
-      setLoading(true);
+      if (pageNum === 1) {
+        setLoading(true);
+      }
+
+      loadingPageRef.current = pageNum;
       setError(null);
 
       const offset = (pageNum - 1) * POSTS_PER_PAGE;
       const limit = POSTS_PER_PAGE;
+
+      console.log(
+        `Loading posts page ${pageNum}, offset: ${offset}, limit: ${limit}`
+      );
 
       // Pass all three expected arguments
       const data = await socialService.getPosts(pageNum, POSTS_PER_PAGE, {
@@ -31,27 +44,34 @@ export function useSocialPosts() {
         limit,
       });
 
-      setPosts((prev) => (pageNum === 1 ? data : [...prev, ...data])); // Append new posts
-      setHasMore(data.length === POSTS_PER_PAGE); // If less than 10, no more data
+      setPosts((prev) => (append ? [...prev, ...data] : data));
+      setHasMore(data.length === POSTS_PER_PAGE); // If less than expected count, no more data
+
+      console.log(`Loaded ${data.length} posts for page ${pageNum}`);
     } catch (err) {
       console.error("Error loading posts:", err);
       setError(err instanceof Error ? err : new Error("Failed to load posts"));
       toast.error("Failed to load posts");
     } finally {
       setLoading(false);
+      isLoadingMore.current = false;
+      loadingPageRef.current = 0;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadPosts();
-  }, [isAuthenticated]);
+    loadPosts(1, false);
+  }, [loadPosts, isAuthenticated]);
 
-  const loadMorePosts = () => {
-    if (hasMore && !loading) {
-      setPage((prev) => prev + 1);
-      loadPosts(page + 1);
+  const loadMorePosts = useCallback(() => {
+    if (hasMore && !loading && !isLoadingMore.current) {
+      console.log("Triggering load more posts");
+      isLoadingMore.current = true;
+      const nextPage = page + 1;
+      setPage(nextPage);
+      loadPosts(nextPage, true);
     }
-  };
+  }, [hasMore, loading, page, loadPosts]);
 
   // Debounced like API call
   const { execute: debouncedLikePost } = useDebounce(
@@ -176,7 +196,7 @@ export function useSocialPosts() {
     posts,
     loading,
     error,
-    refresh: () => loadPosts(1),
+    refresh: () => loadPosts(1, false),
     likePost,
     commentPost,
     loadMorePosts,

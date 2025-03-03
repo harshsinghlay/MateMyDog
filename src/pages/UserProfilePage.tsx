@@ -148,7 +148,7 @@ export function UserProfilePage() {
 
   if (!userInfo) {
     return (
-      <div className="flex items-center justify-center ">
+      <div className="h-full flex items-center justify-center ">
         <div className="text-center">
           <p className="text-gray-600 mb-4">Unable to load user profile</p>
           <button
