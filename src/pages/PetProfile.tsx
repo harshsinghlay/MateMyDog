@@ -11,6 +11,8 @@ import { EditPetProfile } from "../components/pet/edit/EditPetProfile";
 import { SharePetProfile } from "../components/pet/share/SharePetProfile";
 import { petService } from "../lib/supabase/services";
 import type { Pet, MedicalRecord, Vaccination } from "../types/pet";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/Tabs";
+import { PetMatchmaking } from "../components/pet/matchmaking/PetMatchmaking";
 
 export function PetProfile() {
   const { id } = useParams();
@@ -192,21 +194,50 @@ export function PetProfile() {
           <div className="lg:col-span-1">
             <PetDetails pet={pet} />
           </div>
-          <div className="lg:col-span-2 space-y-8">
-            <PetSocial
-              pet={pet}
-              onLike={handleLike}
-              onReview={handleReview}
-              onComment={handleComment}
-            />
-            <PetMedicalHistory
-              records={pet.medicalHistory}
-              onAddRecord={handleAddMedicalRecord}
-            />
-            <PetVaccinations
-              vaccinations={pet.vaccinations}
-              onAddVaccination={handleAddVaccination}
-            />
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-lg shadow-sm">
+              <Tabs defaultValue="social" className="w-full">
+                <TabsList className="w-full border-b">
+                  <TabsTrigger value="social" className="flex-1">
+                    Social
+                  </TabsTrigger>
+                  <TabsTrigger value="matchmaking" className="flex-1">
+                    Matchmaking
+                  </TabsTrigger>
+                  <TabsTrigger value="wellbeing" className="flex-1">
+                    Wellbeing
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="social" className="p-6">
+                  <PetSocial
+                    pet={pet}
+                    onLike={handleLike}
+                    onReview={handleReview}
+                    onComment={handleComment}
+                  />
+                </TabsContent>
+
+                <TabsContent value="matchmaking" className="p-6">
+                  <PetMatchmaking
+                    pet={pet}
+                    onUpdate={handleUpdatePet}
+                    isOwner={isOwner}
+                  />
+                </TabsContent>
+
+                <TabsContent value="wellbeing" className="p-6 space-y-6">
+                  <PetMedicalHistory
+                    records={pet.medicalHistory}
+                    onAddRecord={handleAddMedicalRecord}
+                  />
+                  <PetVaccinations
+                    vaccinations={pet.vaccinations}
+                    onAddVaccination={handleAddVaccination}
+                  />
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
 

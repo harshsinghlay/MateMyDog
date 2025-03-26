@@ -109,7 +109,7 @@ class SocialService {
         createdAt: post.created_at,
         isLiked: user
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            post.post_likes?.some((like: any) => like.user_id === user.id)
+          post.post_likes?.some((like: any) => like.user_id === user.id)
           : false,
       }));
     } catch (error) {
@@ -320,7 +320,7 @@ class SocialService {
         createdAt: post.created_at,
         isLiked: user
           ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            post.post_likes?.some((like: any) => like.user_id === user.id)
+          post.post_likes?.some((like: any) => like.user_id === user.id)
           : false,
       }));
     } catch (error) {
@@ -328,6 +328,59 @@ class SocialService {
       throw error;
     }
   }
+
+  async getUserPosts(userId: string): Promise<SocialPost[]> {
+    try {
+      const { data: posts, error: postsError } = await supabase
+        .from("social_posts")
+        .select(
+          `
+          *,
+          pets (
+            name,
+            image_url,
+            owner_name
+          ),
+          post_likes (
+            user_id
+          )
+        `
+        )
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (postsError) throw postsError;
+      if (!posts) return [];
+
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      return posts.map((post) => ({
+        id: post.id,
+        userId: post.user_id,
+        petId: post.pet_id,
+        petName: post.pets?.name,
+        petImageUrl: post.pets?.image_url,
+        ownerName: post.pets?.owner_name,
+        imageUrl: post.image_url,
+        // videoUrl: post.video_url,
+        storyText: post.story_text,
+        hashtags: post.hashtags || [],
+        location: post.location,
+        likesCount: post.likes_count || 0,
+        commentsCount: post.comments_count || 0,
+        createdAt: post.created_at,
+        isLiked: user
+          ? post.post_likes?.some((like: any) => like.user_id === user.id)
+          : false,
+      }));
+    } catch (error) {
+      console.error("Error fetching user posts:", error);
+      throw error;
+    }
+  }
 }
+
 
 export const socialService = new SocialService();

@@ -7,7 +7,7 @@ class UserService {
     try {
       const { data, error } = await supabase
         .from("profiles") // Ensure it matches `updateUserInfo`
-        .select("id, fullName, email, avatar_url, address") // Select only necessary fields
+        .select("id, fullName, email, avatar_url, location") // Select only necessary fields
         .eq("id", userId) // Use `id` instead of `user_id`
         .single();
 
@@ -18,7 +18,7 @@ class UserService {
             fullName: data.fullName,
             email: data.email,
             avatarUrl: data.avatar_url,
-            address: data.address,
+            location: data.location,
           }
     } catch (error) {
       console.error("Error getting user info:", error);
@@ -36,7 +36,7 @@ class UserService {
             fullName: info.fullName,
             email: info.email,
             avatar_url: info.avatarUrl,
-            address: info.address,
+            location: info.location,
           },
         //   { onConflict: ["id"] } // Use ID for conflict resolution
         )

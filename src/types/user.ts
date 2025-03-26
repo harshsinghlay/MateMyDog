@@ -3,11 +3,13 @@ export interface User {
   fullName: string;
   email: string;
   avatarUrl: string;
-  address: {
+  location: {
     city?: string;
     state?: string;
     country?: string;
     postalCode?: string;
+    lat? : string;
+    lng?: string;
   };
 }
 

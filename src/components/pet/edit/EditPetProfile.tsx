@@ -24,6 +24,7 @@ export function EditPetProfile({
   isNewPet = false,
 }: EditPetProfileProps) {
   const { user } = useAuth();
+  
 
   const [formData, setFormData] = useState<Pet>({
     name: "",
@@ -37,10 +38,12 @@ export function EditPetProfile({
     dateOfBirth: "",
     weight: 0,
     location: {
-      city: user?.address?.city || "",
-      state: user?.address?.state || "",
-      country: user?.address?.country || "",
-      postalCode: user?.address?.postalCode || "",
+      city: user?.location?.city || "",
+      state: user?.location?.state || "",
+      country: user?.location?.country || "",
+      postalCode: user?.location?.postalCode || "",
+      lat: user?.location?.lat || "",
+      lng: user?.location?.lng || "",
     },
     microchipId: "",
     temperament: [],

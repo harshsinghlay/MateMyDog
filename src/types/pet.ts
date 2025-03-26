@@ -25,6 +25,10 @@ export interface Pet {
   reviews: Review[];
   comments: Comment[];
   rating: number;
+  matchmaking?: {
+    enabled: boolean;
+    purposes: string[];
+  };
 }
 
 export interface MedicalRecord {

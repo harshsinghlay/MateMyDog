@@ -4,43 +4,21 @@ import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { useMediaUpload } from "../hooks/useMediaUpload";
 import { userService } from "../lib/supabase/services/userService";
-// import { authService } from "../lib/supabase/auth";
+import { UserPosts } from "../components/user/UserPosts";
 import type { User } from "../types/user";
-// import { useNavigate } from "react-router-dom";
 
 export function UserProfilePage() {
   const { user, setUser } = useAuth();
   const { uploadMedia, uploading } = useMediaUpload();
   const [saving, setSaving] = useState(false);
   const [userInfo, setUserInfo] = useState<User | null>(null);
-  //   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  //   const [isDeleting, setIsDeleting] = useState(false);
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
-  //   const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
       setUserInfo(user);
     }
   }, [user?.id]);
-
-  //   const handleDeleteAccount = async () => {
-  //     if (!user?.id || isDeleting) return;
-
-  //     try {
-  //       setIsDeleting(true);
-  //       await authService.deleteUser(user.id);
-  //       await signOut();
-  //       navigate("/");
-  //       toast.success("Your account has been deleted");
-  //     } catch (error) {
-  //       console.error("Error deleting account:", error);
-  //       toast.error("Failed to delete account");
-  //     } finally {
-  //       setIsDeleting(false);
-  //       setShowDeleteConfirm(false);
-  //     }
-  //   };
 
   const handleLocationDetection = () => {
     if (!navigator.geolocation) {
@@ -60,15 +38,18 @@ export function UserProfilePage() {
           if (data.results?.[0]?.components) {
             const { city, state, country, postcode } =
               data.results[0].components;
+            const {lat , lng} = data.results[0].geometry;
             setUserInfo((prev) =>
               prev
                 ? {
                     ...prev,
-                    address: {
+                    location: {
                       city: city || "",
                       state: state || "",
                       country: country || "",
                       postalCode: postcode || "",
+                      lat: lat || "",
+                      lng: lng || "",
                     },
                   }
                 : null
@@ -90,6 +71,7 @@ export function UserProfilePage() {
   };
 
   const updateUser = async (userId: string, info: User): Promise<void> => {
+    
     try {
       setSaving(true);
       await userService.updateUserInfo(userId, info);
@@ -112,7 +94,7 @@ export function UserProfilePage() {
       fullName: userInfo.fullName,
       email: userInfo.email,
       avatarUrl: userInfo.avatarUrl,
-      address: userInfo.address,
+      location: userInfo.location,
     };
 
     await updateUser(user.id, updateData);
@@ -164,7 +146,7 @@ export function UserProfilePage() {
 
   return (
     <div className="pb-16 md:pb-0">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="p-6 space-y-8">
             <div className="flex items-center space-x-8">
@@ -257,14 +239,14 @@ export function UserProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userInfo.address?.city || ""}
+                      value={userInfo.location?.city || ""}
                       onChange={(e) =>
                         setUserInfo((prev) =>
                           prev
                             ? {
                                 ...prev,
-                                address: {
-                                  ...(prev.address || {}),
+                                location: {
+                                  ...(prev.location || {}),
                                   city: e.target.value,
                                 },
                               }
@@ -282,14 +264,14 @@ export function UserProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userInfo.address?.state || ""}
+                      value={userInfo.location?.state || ""}
                       onChange={(e) =>
                         setUserInfo((prev) =>
                           prev
                             ? {
                                 ...prev,
-                                address: {
-                                  ...(prev.address || {}),
+                                location: {
+                                  ...(prev.location || {}),
                                   state: e.target.value,
                                 },
                               }
@@ -307,14 +289,14 @@ export function UserProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userInfo.address?.country || ""}
+                      value={userInfo.location?.country || ""}
                       onChange={(e) =>
                         setUserInfo((prev) =>
                           prev
                             ? {
                                 ...prev,
-                                address: {
-                                  ...(prev.address || {}),
+                                location: {
+                                  ...(prev.location || {}),
                                   country: e.target.value,
                                 },
                               }
@@ -332,14 +314,14 @@ export function UserProfilePage() {
                     </label>
                     <input
                       type="text"
-                      value={userInfo.address?.postalCode || ""}
+                      value={userInfo.location?.postalCode || ""}
                       onChange={(e) =>
                         setUserInfo((prev) =>
                           prev
                             ? {
                                 ...prev,
-                                address: {
-                                  ...(prev.address || {}),
+                                location: {
+                                  ...(prev.location || {}),
                                   postalCode: e.target.value,
                                 },
                               }
@@ -365,6 +347,12 @@ export function UserProfilePage() {
             </form>
           </div>
         </div>
+        {userInfo && (
+          <div>
+            <h2 className="text-xl font-medium text-gray-900 mb-4">Your Posts</h2>
+            <UserPosts userId={userInfo.id} />
+          </div>
+        )}
       </div>
     </div>
   );

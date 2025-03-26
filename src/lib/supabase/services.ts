@@ -46,27 +46,6 @@ export class PetService {
       .eq("pet_id", dbPet.id)
       .order("date", { ascending: false });
 
-    let location;
-    try {
-      location = dbPet.location
-        ? JSON.parse(dbPet.location)
-        : {
-            address: "",
-            city: "",
-            state: "",
-            country: "",
-            postalCode: "",
-          };
-    } catch (e) {
-      console.warn("Invalid location data:", e);
-      location = {
-        address: "",
-        city: "",
-        state: "",
-        country: "",
-        postalCode: "",
-      };
-    }
 
     return {
       id: dbPet.id,
@@ -78,11 +57,11 @@ export class PetService {
       ownerId: dbPet.owner_id || "",
       ownerName: dbPet.owner_name || "",
       dateOfBirth:
-        dbPet.date_of_birth || new Date().toISOString().split("T")[0],
+      dbPet.date_of_birth || new Date().toISOString().split("T")[0],
       weight: dbPet.weight || 0,
       microchipId: dbPet.microchip_id || "",
       temperament: dbPet.temperament || [],
-      location,
+      location : dbPet.location ? JSON.parse(dbPet.location) : null,
       media: dbPet.media || [],
       likes: dbPet.likes || [],
       reviews: dbPet.reviews || [],
@@ -138,6 +117,7 @@ export class PetService {
 
   async addPet(pet: Omit<Pet, "id">) {
     if (!pet.ownerId) throw new Error("Owner ID is required");
+    
 
     try {
       const { medicalHistory, vaccinations, ...petData } = pet;
