@@ -3,6 +3,7 @@ export interface User {
   fullName: string;
   email: string;
   avatarUrl: string;
+  isActive : boolean;
   location: {
     city?: string;
     state?: string;

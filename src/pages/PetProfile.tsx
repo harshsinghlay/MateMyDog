@@ -56,30 +56,13 @@ export function PetProfile() {
       const saved = await petService.updatePet(id, updatedPet);
       setPet(saved);
       setIsEditing(false);
-      toast.success("Pet profile updated successfully");
+      toast.success("Pet Updated successfully");
     } catch (err) {
       console.error("Error updating pet:", err);
       toast.error("Failed to update pet profile");
     }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleDeletePet = async () => {
-    if (!id || isDeleting) return;
-
-    try {
-      setIsDeleting(true);
-      await petService.deletePet(id);
-      toast.success("Pet deleted successfully");
-      navigate("/pets");
-    } catch (err) {
-      console.error("Error deleting pet:", err);
-      toast.error("Failed to delete pet");
-    } finally {
-      setIsDeleting(false);
-      setShowDeleteConfirm(false);
-    }
-  };
 
   const handleLike = async () => {
     if (!id || !user) {

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Camera, MapPin, UserCircle } from "lucide-react";
+import { Camera, MapPin, UserCircle, Power } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 import { useMediaUpload } from "../hooks/useMediaUpload";
 import { userService } from "../lib/supabase/services/userService";
 import { UserPosts } from "../components/user/UserPosts";
 import type { User } from "../types/user";
+import { useDebounce } from "../hooks/useDebounce";
 
 export function UserProfilePage() {
   const { user, setUser } = useAuth();
@@ -13,6 +14,32 @@ export function UserProfilePage() {
   const [saving, setSaving] = useState(false);
   const [userInfo, setUserInfo] = useState<User | null>(null);
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+  const [activeStatus, setActiveStatus] = useState(user?.isActive);
+
+  const { execute: debouncedUpdateStatus } = useDebounce(
+    async (isActive: boolean) => {
+      if (!user?.id) return;
+      await userService.updateUserActiveStatus(user.id, isActive);
+      return isActive;
+    },
+    {
+      delay: 500,
+      onError: (error) => {
+        toast.error("Failed to update active status");
+        setActiveStatus(!activeStatus); // Revert on error
+      },
+    }
+  );
+
+  const handleActiveStatusChange = async (checked: boolean) => {
+    setActiveStatus(checked);
+    try {
+      await debouncedUpdateStatus(checked);
+      toast.success(`Profile ${checked ? 'activated' : 'deactivated'} successfully`);
+    } catch (error) {
+      console.error("Error updating active status:", error);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -71,7 +98,6 @@ export function UserProfilePage() {
   };
 
   const updateUser = async (userId: string, info: User): Promise<void> => {
-    
     try {
       setSaving(true);
       await userService.updateUserInfo(userId, info);
@@ -95,6 +121,7 @@ export function UserProfilePage() {
       email: userInfo.email,
       avatarUrl: userInfo.avatarUrl,
       location: userInfo.location,
+      isActive : userInfo.isActive
     };
 
     await updateUser(user.id, updateData);
@@ -128,6 +155,7 @@ export function UserProfilePage() {
     }
   };
 
+
   if (!userInfo) {
     return (
       <div className="h-full flex items-center justify-center ">
@@ -149,6 +177,7 @@ export function UserProfilePage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="p-6 space-y-8">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-8">
               <div className="relative">
                 <div className="h-32 w-32 rounded-full overflow-hidden">
@@ -186,6 +215,23 @@ export function UserProfilePage() {
                 <p className="text-gray-500">{userInfo.email}</p>
               </div>
             </div>
+
+             {/* Active Status Toggle */}
+               <button
+                onClick={() => handleActiveStatusChange(!activeStatus)}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
+                  activeStatus
+                    ? "bg-green-100 text-green-700"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                <Power className={`h-4 w-4 ${activeStatus ? "text-green-600" : "text-gray-500"}`} />
+                <span className="text-sm font-medium">
+                  {activeStatus ? "Active" : "Inactive"}
+                </span>
+              </button>
+
+              </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>

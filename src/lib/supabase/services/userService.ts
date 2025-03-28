@@ -7,7 +7,7 @@ class UserService {
     try {
       const { data, error } = await supabase
         .from("profiles") // Ensure it matches `updateUserInfo`
-        .select("id, fullName, email, avatar_url, location") // Select only necessary fields
+        .select("id, fullName, email, avatar_url, location, is_active") // Select only necessary fields
         .eq("id", userId) // Use `id` instead of `user_id`
         .single();
 
@@ -19,6 +19,7 @@ class UserService {
             email: data.email,
             avatarUrl: data.avatar_url,
             location: data.location,
+            isActive : data.is_active,
           }
     } catch (error) {
       console.error("Error getting user info:", error);
@@ -37,8 +38,8 @@ class UserService {
             email: info.email,
             avatar_url: info.avatarUrl,
             location: info.location,
+            is_active : info.isActive,
           },
-        //   { onConflict: ["id"] } // Use ID for conflict resolution
         )
         .select()
         .single();
@@ -49,36 +50,37 @@ class UserService {
 
       if (error) throw error;
 
-    //   // Optionally update the auth metadata
-    //   const { error: updateError } = await supabase.auth.updateUser({
-    //     data: {
-    //       full_name: info.fullName,
-    //       avatar_url: info.avatarUrl,
-    //     },
-    //   });
-
-    //   if (updateError) throw updateError;
+  
     } catch (error) {
       console.error("Error updating user info:", error);
       throw error;
     }
   }
 
-  //   async getUserAddress(userId: string) {
-  //     try {
-  //       const { data, error } = await supabase
-  //         .from("user_personal_info")
-  //         .select("address")
-  //         .eq("user_id", userId)
-  //         .single();
+  async updateUserActiveStatus(userId: string, isActive: boolean):    Promise<void> {
+    try {
+      // First update all pets of this user
+      const { error: petsError } = await supabase
+        .from('pets')
+        .update({  is_active : isActive })
+        .eq('owner_id', userId);
 
-  //       if (error) throw error;
-  //       return data?.address;
-  //     } catch (error) {
-  //       console.error("Error getting user address:", error);
-  //       throw error;
-  //     }
-  //   }
+      if (petsError) throw new Error('Failed to update pets status');
+
+      // Then update user profile
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ is_active : isActive })
+        .eq('id', userId);
+
+      if (profileError) throw new Error('Failed to update user status');
+
+    } catch (error) {
+      console.error("Error updating active status:", error);
+      throw error;
+    }
+  }
+
 }
 
 export const userService = new UserService();

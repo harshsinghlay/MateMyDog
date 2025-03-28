@@ -17,6 +17,8 @@ export interface Pet {
     state: string;
     country: string;
     postalCode: string;
+    lat: string;
+    lng: string;
   };
   medicalHistory: MedicalRecord[];
   vaccinations: Vaccination[];
@@ -25,6 +27,7 @@ export interface Pet {
   reviews: Review[];
   comments: Comment[];
   rating: number;
+  isActive : boolean;
   matchmaking?: {
     enabled: boolean;
     purposes: string[];
