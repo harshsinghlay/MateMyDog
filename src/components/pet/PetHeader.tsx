@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Edit, Share2 } from 'lucide-react';
 import type { Pet } from '../../types/pet';
 
@@ -10,6 +10,14 @@ interface PetHeaderProps {
 }
 
 export function PetHeader({ pet, isOwner, onEdit, onShare }: PetHeaderProps) {
+ 
+
+  useEffect(()=>{
+     console.log("Pet is",pet);
+     
+  },[pet])
+ 
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-8">
       <div className="flex flex-col md:flex-row md:items-center md:space-x-8">
@@ -35,7 +43,7 @@ export function PetHeader({ pet, isOwner, onEdit, onShare }: PetHeaderProps) {
                 <span className="capitalize">{pet.gender}</span>
               </div>
               <p className="mt-2 text-gray-600">
-                Owner: <span className="font-medium">{pet.ownerName}</span>
+                Owner: <span className="font-medium">{pet.owner.fullName}</span>
               </p>
             </div>
             <div className="mt-4 sm:mt-0 flex space-x-4">

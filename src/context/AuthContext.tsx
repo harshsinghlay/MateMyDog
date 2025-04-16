@@ -23,6 +23,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  
+   
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -31,6 +34,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentUser) {
           setIsAuthenticated(true);
           const userInfo = await userService.getUserInfo(currentUser.id);
+          console.log("UserInfo is",userInfo);
+          
           setUser({ ...currentUser, ...userInfo });
         }
       } catch (error) {

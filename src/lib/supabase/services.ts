@@ -3,36 +3,41 @@ import type {
   Pet,
   MedicalRecord,
   Vaccination,
-  Review,
   Comment,
   Like,
 } from "../../types/pet";
+import { userService } from "./services/userService";
 
 export class PetService {
   private toDbFormat(pet: Partial<Pet>) {
-    const { imageUrl, ownerId, ownerName, dateOfBirth, microchipId, ...rest } =
-      pet;
-
+    
     return {
-      ...rest,
-      image_url: imageUrl,
-      owner_id: ownerId,
-      owner_name: ownerName,
-      date_of_birth: dateOfBirth,
-      temperament: rest.temperament || [],
-      location: rest.location ? JSON.stringify(rest.location) : null,
-      media: rest.media || [],
-      likes: rest.likes || [],
-      reviews: rest.reviews || [],
-      comments: rest.comments || [],
-      rating: rest.rating || 0,
-      microchip_id: microchipId || "",
+      name : pet.name,
+      image_url: pet.imageUrl,
+      owner: pet.owner.id,
+      date_of_birth: pet.dateOfBirth,
+      temperament: pet.temperament || [],
+      media: pet.media || [],
+      likes: pet.likes || [],
+      reviews: pet.reviews || [],
+      comments: pet.comments || [],
+      rating: pet.rating || 0,
+      microchip_id: pet.microchipId || "",
+      is_active: pet.isActive,
+      breed : pet.breed,
+      age : pet.age,
+      gender : pet.gender,
+      weight : pet.weight,
+      matchmaking:  pet.matchmaking || null
     };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async fromDbFormat(dbPet: any): Promise<Pet> {
     if (!dbPet) throw new Error("Invalid pet data");
+
+    console.log("Dbpet is",dbPet);
+    
 
     const { data: medicalRecords } = await supabase
       .from("pet_medical_records")
@@ -46,7 +51,6 @@ export class PetService {
       .eq("pet_id", dbPet.id)
       .order("date", { ascending: false });
 
-
     return {
       id: dbPet.id,
       name: dbPet.name || "",
@@ -54,14 +58,11 @@ export class PetService {
       age: dbPet.age || 0,
       gender: dbPet.gender || "male",
       imageUrl: dbPet.image_url || "",
-      ownerId: dbPet.owner_id || "",
-      ownerName: dbPet.owner_name || "",
       dateOfBirth:
       dbPet.date_of_birth || new Date().toISOString().split("T")[0],
       weight: dbPet.weight || 0,
       microchipId: dbPet.microchip_id || "",
       temperament: dbPet.temperament || [],
-      location : dbPet.location ? JSON.parse(dbPet.location) : null,
       media: dbPet.media || [],
       likes: dbPet.likes || [],
       reviews: dbPet.reviews || [],
@@ -69,6 +70,13 @@ export class PetService {
       rating: dbPet.rating || 0,
       medicalHistory: medicalRecords || [],
       vaccinations: vaccinations || [],
+      isActive: dbPet.is_active,
+      matchmaking : dbPet.matchmaking,
+      owner : {
+         ...dbPet.owner,
+         isActive : dbPet.owner.is_active,
+         fullName : dbPet.owner.full_name,
+      }
     };
   }
 
@@ -79,7 +87,7 @@ export class PetService {
       const { data, error } = await supabase
         .from("pets")
         .select("*")
-        .eq("owner_id", userId)
+        .eq("owner", userId)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -97,14 +105,30 @@ export class PetService {
 
   async getPet(id: string): Promise<Pet> {
     if (!id) throw new Error("Pet ID is required");
-
     try {
       const { data: pet, error: petError } = await supabase
         .from("pets")
-        .select("*")
+        .select(`
+          *,
+          owner:profiles (
+            id,
+            full_name,
+            email,
+            is_active,
+            location:addresses (
+              id,
+              city,
+              state,
+              country,
+              postal_code,
+              lat,
+              lng
+            )
+          )
+        `)
         .eq("id", id)
         .single();
-
+       
       if (petError) throw petError;
       if (!pet) throw new Error("Pet not found");
 
@@ -116,8 +140,7 @@ export class PetService {
   }
 
   async addPet(pet: Omit<Pet, "id">) {
-    if (!pet.ownerId) throw new Error("Owner ID is required");
-    
+    if (!pet.owner.id) throw new Error("Owner ID is required");
 
     try {
       const { medicalHistory, vaccinations, ...petData } = pet;
@@ -181,7 +204,24 @@ export class PetService {
         .from("pets")
         .update(this.toDbFormat(petData))
         .eq("id", id)
-        .select()
+        .select(`
+          *,
+          owner:profiles (
+            id,
+            full_name,
+            email,
+            is_active,
+            location:addresses (
+              id,
+              city,
+              state,
+              country,
+              postal_code,
+              lat,
+              lng
+            )
+          )
+        `)
         .single();
 
       if (petError) throw petError;
@@ -238,20 +278,6 @@ export class PetService {
       return this.fromDbFormat(updatedPet);
     } catch (error) {
       console.error("Pet service :: updatePet :: error", error);
-      throw error;
-    }
-  }
-
-  async deletePet(id: string) {
-    if (!id) throw new Error("Pet ID is required");
-
-    try {
-      const { error } = await supabase.from("pets").delete().eq("id", id);
-
-      if (error) throw error;
-      return true;
-    } catch (error) {
-      console.error("Pet service :: deletePet :: error", error);
       throw error;
     }
   }
@@ -328,49 +354,6 @@ export class PetService {
     }
   }
 
-  async reviewPet(
-    petId: string,
-    userId: string,
-    userName: string,
-    rating: number,
-    comment: string
-  ): Promise<Pet> {
-    if (!petId || !userId) throw new Error("Pet ID and User ID are required");
-
-    try {
-      const pet = await this.getPet(petId);
-      const newReview: Review = {
-        id: crypto.randomUUID(),
-        userId,
-        userName: userName || "Anonymous",
-        rating,
-        comment,
-        timestamp: new Date().toISOString(),
-        likes: 0,
-      };
-
-      const updatedReviews = [...pet.reviews, newReview];
-      const averageRating =
-        updatedReviews.reduce((acc, review) => acc + review.rating, 0) /
-        updatedReviews.length;
-
-      const { data: updatedPet, error } = await supabase
-        .from("pets")
-        .update({
-          reviews: updatedReviews,
-          rating: Math.round(averageRating * 10) / 10,
-        })
-        .eq("id", petId)
-        .select()
-        .single();
-
-      if (error) throw error;
-      return this.fromDbFormat(updatedPet);
-    } catch (error) {
-      console.error("Pet service :: reviewPet :: error", error);
-      throw error;
-    }
-  }
 
   async postComment(
     petId: string,

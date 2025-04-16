@@ -1,3 +1,5 @@
+import type { Address, User } from "./user";
+
 export interface Pet {
   id: string;
   name: string;
@@ -5,21 +7,11 @@ export interface Pet {
   age: number;
   gender: 'male' | 'female';
   imageUrl: string;
-  ownerId: string;
-  ownerName: string;
+  owner: User;
   dateOfBirth: string;
   weight: number;
   microchipId: string;
   temperament: string[];
-  location: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-    lat: string;
-    lng: string;
-  };
   medicalHistory: MedicalRecord[];
   vaccinations: Vaccination[];
   media: PetMedia[];

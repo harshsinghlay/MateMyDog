@@ -16,6 +16,7 @@ export function UserProfilePage() {
   const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
   const [activeStatus, setActiveStatus] = useState(user?.isActive);
 
+
   const { execute: debouncedUpdateStatus } = useDebounce(
     async (isActive: boolean) => {
       if (!user?.id) return;
@@ -71,6 +72,7 @@ export function UserProfilePage() {
                 ? {
                     ...prev,
                     location: {
+                      id : prev.location.id, 
                       city: city || "",
                       state: state || "",
                       country: country || "",

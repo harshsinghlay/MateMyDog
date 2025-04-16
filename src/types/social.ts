@@ -1,3 +1,5 @@
+import type { Address } from "./user";
+
 export interface SocialPost {
   id: string;
   userId: string;
@@ -8,13 +10,7 @@ export interface SocialPost {
   imageUrl: string;
   storyText: string;
   hashtags: string[];
-  location: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-  };
+  location: Address;
   likesCount: number;
   commentsCount: number;
   createdAt: string;
@@ -42,11 +38,5 @@ export interface CreatePostData {
   imageUrl: string;
   storyText: string;
   hashtags: string[];
-  location: {
-    address: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-  };
+  location: Address;
 }

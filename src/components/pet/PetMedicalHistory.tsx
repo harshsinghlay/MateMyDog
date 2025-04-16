@@ -15,8 +15,10 @@ export function PetMedicalHistory({ records, onAddRecord }: PetMedicalHistoryPro
     if (!onAddRecord) return;
   
     try {
-      await onAddRecord(record); // Wait for the record to be added
-      setIsAddingRecord(false); // Close modal only after successful save
+      await onAddRecord(record); 
+      // Wait for the record to be added 
+      setIsAddingRecord(false); 
+      // Close modal only after successful save 
     } catch (error) {
       console.error("Error saving medical record:", error);
       // Optionally, show an error message

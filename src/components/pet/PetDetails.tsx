@@ -1,12 +1,14 @@
 import React from 'react';
 import { Cake, Weight, Dna, QrCode, MapPin } from 'lucide-react';
 import type { Pet } from '../../types/pet';
+import { useAuth } from '../../context/AuthContext';
 
 interface PetDetailsProps {
   pet: Pet;
 }
 
 export function PetDetails({ pet }: PetDetailsProps) {
+  const {user } = useAuth();
   const details = [
     { icon: Cake, label: 'Date of Birth', value: pet.dateOfBirth },
     { icon: Weight, label: 'Weight', value: `${pet.weight} kg` },
@@ -15,7 +17,7 @@ export function PetDetails({ pet }: PetDetailsProps) {
     { 
       icon: MapPin, 
       label: 'Location', 
-      value: `${pet.location.city}, ${pet.location.state}, ${pet.location.country}` 
+      value: pet.owner.location?.lat ? `${pet.owner.location.city}, ${pet.owner.location.state}, ${pet.owner.location.country}` : 'Not avaliable',
     },
   ];
 

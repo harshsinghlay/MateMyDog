@@ -7,7 +7,7 @@ export const mockPetData: Pet = {
   age: 2,
   gender: 'female',
   imageUrl: 'https://images.unsplash.com/photo-1633722715463-d30f4f325e24?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-  ownerId: 'user1',
+  Owner: 'user1',
   ownerName: 'Sarah Johnson',
   dateOfBirth: '2022-01-15',
   weight: 25,

@@ -33,18 +33,9 @@ export function EditPetProfile({
     gender: "male",
     imageUrl:
       "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-    ownerId: "",
-    ownerName: user?.fullName || "",
+    owner: user?.id,
     dateOfBirth: "",
     weight: 0,
-    location: {
-      city: user?.location?.city || "",
-      state: user?.location?.state || "",
-      country: user?.location?.country || "",
-      postalCode: user?.location?.postalCode || "",
-      lat: user?.location?.lat || "",
-      lng: user?.location?.lng || "",
-    },
     microchipId: "",
     temperament: [],
     medicalHistory: [],
@@ -54,6 +45,11 @@ export function EditPetProfile({
     reviews: [],
     comments: [],
     rating: 0,
+    isActive : user?.isActive,
+    matchmaking : {
+      enabled: false,
+      purposes: [],
+    },
     ...pet,
   });
 
@@ -87,26 +83,7 @@ export function EditPetProfile({
       toast.error("Weight must be greater than 1");
       return false;
     }
-
-    const requiredLocationFields: (keyof Pet["location"])[] = [
-      "city",
-      "state",
-      "country",
-      "postalCode",
-    ];
-    const missingLocationFields = requiredLocationFields.filter(
-      (field) => !formData.location[field]
-    );
-
-    if (missingLocationFields.length > 0) {
-      toast.error(
-        `Please fill in all location fields: ${missingLocationFields.join(
-          ", "
-        )}`
-      );
-      return false;
-    }
-
+   
     return true;
   };
 

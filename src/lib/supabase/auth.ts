@@ -2,48 +2,6 @@ import { supabase } from "../supabase";
 import type { User } from "@supabase/supabase-js";
 
 export class AuthService {
-  //   async createAccount({
-  //     email,
-  //     password,
-  //     fullName,
-  //   }: {
-  //     email: string;
-  //     password: string;
-  //     fullName: string;
-  //   }) {
-  //     try {
-  //       // Try signing in first to check if the user exists
-  //       const { error: signInError } = await supabase.auth.signInWithPassword({
-  //         email,
-  //         password,
-  //       });
-
-  //       if (!signInError) {
-  //         throw new Error("User already exists. Please log in instead.");
-  //       }
-
-  //       // If sign-in fails, proceed with signup
-  //       const { data, error } = await supabase.auth.signUp({
-  //         email,
-  //         password,
-  //         options: {
-  //           data: {
-  //             fullName: fullName,
-  //           },
-  //         },
-  //       });
-
-  //       // **Fix: Prioritize errors over success messages**
-  //       if (error) {
-  //         throw error; // This ensures the error is handled before returning any response
-  //       }
-
-  //       return data; // Only return data if there's no error
-  //     } catch (error) {
-  //       console.error("AuthService :: createAccount :: error", error);
-  //       throw error; // This ensures the caller (AuthContext) correctly receives and handles the error
-  //     }
-  //   }
 
   async createAccount({
     email,
@@ -72,7 +30,7 @@ export class AuthService {
       }
 
       // Proceed with signup
-      const { data, error } = await supabase.auth.signUp({
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -82,11 +40,57 @@ export class AuthService {
         },
       });
 
-      if (error) {
-        throw new Error("Signup failed! Please try again.");
+
+      if (authError) throw new Error("Signup failed! Please try again.");
+
+      // Ensure user data exists and has an ID
+      if (!authData.user?.id) throw new Error("UserId is missing after signup");
+
+      const userId = authData.user.id;
+
+      // Insert an empty entry into the addresses table
+      const { data: addressData, error: addressError } = await supabase.from("addresses").insert([
+        {
+          user_id: userId,
+          postal_code: "",
+          state: "",
+          city: "",
+          country: "",
+          lat: "",
+          lng: "",
+        },
+      ]).select("id") // Only select the id we need
+        .single();
+
+      if (addressError) {
+        console.error("Address creation failed:", addressError.message);
+        throw new Error("Failed to add address");
       }
 
-      return data; // Only return data if there's no error
+      // 4. Create profile with address reference
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: userId,
+          email: email,
+          full_name: fullName,
+          location: addressData.id, // Reference to the address
+        });
+
+      if (profileError) {
+        console.error("Profile creation failed:", profileError.message);
+
+        // Attempt to clean up the address if profile creation failed
+        await supabase
+          .from("addresses")
+          .delete()
+          .eq("id", addressData.id);
+
+        throw new Error("Failed to create user profile");
+      }
+
+
+      return authData; // Only return data if there's no error
     } catch (error) {
       console.error("AuthService :: createAccount :: error", error);
       throw error; // Ensures the caller correctly receives and handles the error
@@ -100,7 +104,6 @@ export class AuthService {
         email,
         password,
       });
-
       if (error) throw error;
       return data;
     } catch (error) {
@@ -174,52 +177,7 @@ export class AuthService {
     }
   }
 
-  async deleteUser(userId: string) {
-    try {
-      // Start a transaction
-      const { error: petError } = await supabase
-        .from("pets")
-        .delete()
-        .eq("owner_id", userId);
-      if (petError) throw petError;
 
-      const { error: postLikesError } = await supabase
-        .from("post_likes")
-        .delete()
-        .eq("user_id", userId);
-      if (postLikesError) throw postLikesError;
-
-      const { error: postCommentsError } = await supabase
-        .from("post_comments")
-        .delete()
-        .eq("user_id", userId);
-      if (postCommentsError) throw postCommentsError;
-
-      const { error: socialPostsError } = await supabase
-        .from("social_posts")
-        .delete()
-        .eq("user_id", userId);
-      if (socialPostsError) throw socialPostsError;
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .delete()
-        .eq("id", userId);
-      if (profileError) throw profileError;
-
-      // Finally, delete the user from auth
-      const { error: authError } = await supabase.auth.admin.deleteUser(userId);
-      if (authError) throw authError;
-
-      return {
-        success: true,
-        message: "User and related data deleted successfully",
-      };
-    } catch (error) {
-      console.error("Auth service :: deleteUser :: error", error);
-      throw error;
-    }
-  }
 }
 
 export const authService = new AuthService();

@@ -27,7 +27,7 @@ export function PetProfile() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const isOwner = user?.id === pet?.ownerId;
+  const isOwner = user?.id === pet?.owner.id;
 
   useEffect(() => {
     const fetchPet = async () => {
@@ -83,24 +83,7 @@ export function PetProfile() {
   };
 
   const handleReview = async (rating: number, comment: string) => {
-    if (!id || !user) {
-      toast.error("You must be logged in to review a pet");
-      return;
-    }
-    try {
-      const updatedPet = await petService.reviewPet(
-        id,
-        user.id,
-        user.fullName || "Anonymous",
-        rating,
-        comment
-      );
-      setPet(updatedPet);
-      toast.success("Review added successfully");
-    } catch (err) {
-      console.error("Error reviewing pet:", err);
-      toast.error("Failed to add review");
-    }
+     
   };
 
   const handleComment = async (content: string) => {

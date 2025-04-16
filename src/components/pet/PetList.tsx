@@ -33,7 +33,6 @@ export function PetList() {
 
       const newPet = {
         ...pet,
-        ownerId: user.id,
       };
 
       await petService.addPet(newPet);

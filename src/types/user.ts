@@ -3,15 +3,18 @@ export interface User {
   fullName: string;
   email: string;
   avatarUrl: string;
-  isActive : boolean;
-  location: {
-    city?: string;
-    state?: string;
-    country?: string;
-    postalCode?: string;
-    lat? : string;
-    lng?: string;
-  };
+  isActive: boolean;
+  location: Address | null;
+}
+
+export interface Address {
+  id?: string,
+  postalCode?: string,
+  state?: string,
+  city?: string,
+  country?: string,
+  lat?: string,
+  lng?: string,
 }
 
 export interface UserPreferences {
