@@ -3,55 +3,10 @@ import { useSwipeable } from "react-swipeable";
 import { PetFeedItem } from "./PetFeedItem";
 import type { SocialPost } from "../../../types/social";
 
-const mockPosts: SocialPost[] = [
-  {
-    id: "1",
-    userId: "user_1", // Placeholder, update as needed
-    petId: "1",
-    petName: "Luna",
-    petImageUrl: "https://images.unsplash.com/photo-1633722715463-d30f4f325e24",
-    ownerName: "Sarah Johnson",
-    imageUrl: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b",
-    storyText: "", // Empty caption mapped to storyText
-    hashtags: [], // No hashtags in the original data
-    location: {
-      address: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-    },
-    likesCount: 0,
-    commentsCount: 0,
-    createdAt: "2024-03-15T10:30:00Z",
-    isLiked: false, // Defaulting to false
-  },
-  {
-    id: "2",
-    userId: "user_2", // Placeholder, update as needed
-    petId: "2",
-    petName: "Rocky",
-    petImageUrl: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95",
-    ownerName: "Mike Wilson",
-    imageUrl: "https://images.unsplash.com/photo-1587300003388-59208cc962cb",
-    storyText: "Beach day with my best friend! 🏖️ #BeachDog #SummerVibes",
-    hashtags: ["#BeachDog", "#SummerVibes"], // Extracted from caption
-    location: {
-      address: "",
-      city: "",
-      state: "",
-      country: "",
-      postalCode: "",
-    },
-    likesCount: 2567,
-    commentsCount: 156,
-    createdAt: "2024-03-14T15:45:00Z",
-    isLiked: false, // Defaulting to false
-  },
-];
+
 
 export function PetFeed() {
-  const [posts, setPosts] = useState<SocialPost[]>(mockPosts);
+  const [posts, setPosts] = useState<SocialPost[]>();
   const [currentIndex, setCurrentIndex] = useState(0);
   const feedRef = useRef<HTMLDivElement>(null);
 

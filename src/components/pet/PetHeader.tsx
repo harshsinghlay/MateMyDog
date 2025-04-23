@@ -38,7 +38,7 @@ export function PetHeader({ pet, isOwner, onEdit, onShare }: PetHeaderProps) {
                 {pet.breed}
               </p>
               <div className="flex items-center space-x-2 text-gray-500">
-                <span>{pet.age} years old</span>
+                <span>{pet.age} old</span>
                 <span>•</span>
                 <span className="capitalize">{pet.gender}</span>
               </div>

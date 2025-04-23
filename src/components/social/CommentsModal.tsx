@@ -47,10 +47,6 @@ export function CommentsModal({
       const comment = await socialService.addComment(
         postId,
         newComment.trim(),
-        {
-          fullName: user.fullName,
-          avatarUrl: user.avatarUrl,
-        }
       );
       setComments((prev) => [...prev, comment]);
       setNewComment("");

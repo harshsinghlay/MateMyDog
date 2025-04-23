@@ -13,7 +13,6 @@ interface PetMatchmakingProps {
 }
 
 export function PetMatchmaking({ pet, onUpdate, isOwner }: PetMatchmakingProps) {
-  
   const {user,  setUser } = useAuth();
   const [includeInMatchmaking, setIncludeInMatchmaking] = useState(
     pet.matchmaking?.enabled || false
@@ -36,9 +35,6 @@ export function PetMatchmaking({ pet, onUpdate, isOwner }: PetMatchmakingProps) 
     }
   }, [includeInMatchmaking]);
 
-  useEffect(()=>{
-    console.log("Pet is",pet);
-  },[])
 
   const handleLocationDetection = async () => {
     if (!navigator.geolocation) {
@@ -122,7 +118,7 @@ export function PetMatchmaking({ pet, onUpdate, isOwner }: PetMatchmakingProps) 
         return;
       }
 
-      if(!pet.owner.location?.lat){
+      if(!user.location?.lat){
           toast.error("Please Update Location");
           return;
       }
@@ -177,7 +173,7 @@ export function PetMatchmaking({ pet, onUpdate, isOwner }: PetMatchmakingProps) 
             </span>
           </label>
           {
-            !pet.owner.location.lat &&
+            !user.location.lat &&
             <button
               type="button"
               onClick={handleLocationDetection}

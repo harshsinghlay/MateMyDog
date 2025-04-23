@@ -9,14 +9,14 @@ import type { SocialPost } from "../../../types/social";
 
 interface PetSocialProps {
   pet: Pet;
-  onLike: () => Promise<void>;
-  onReview: (rating: number, comment: string) => Promise<void>;
-  onComment: (content: string) => Promise<void>;
+  // onLike: () => Promise<void>;
+  // onReview: (rating: number, comment: string) => Promise<void>;
+  // onComment: (content: string) => Promise<void>;
 }
 
 export const PetSocial = memo(function PetSocial({
   pet,
-  onComment,
+  // onComment,
 }: PetSocialProps) {
   const { isAuthenticated } = useAuth();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);
@@ -53,23 +53,23 @@ export const PetSocial = memo(function PetSocial({
     }
   }, [petPosts]);
 
-  const handleComment = useCallback(
-    async (content: string) => {
-      if (!petPosts.length) return;
-      try {
-        await onComment(content);
-        setPetPosts((prev) =>
-          prev.map((post) => ({
-            ...post,
-            commentsCount: post.commentsCount + 1,
-          }))
-        );
-      } catch (error) {
-        console.error("Error commenting:", error);
-      }
-    },
-    [petPosts, onComment]
-  );
+  // const handleComment = useCallback(
+  //   async (content: string) => {
+  //     if (!petPosts.length) return;
+  //     try {
+  //       await onComment(content);
+  //       setPetPosts((prev) =>
+  //         prev.map((post) => ({
+  //           ...post,
+  //           commentsCount: post.commentsCount + 1,
+  //         }))
+  //       );
+  //     } catch (error) {
+  //       console.error("Error commenting:", error);
+  //     }
+  //   },
+  //   [petPosts, onComment]
+  // );
 
   return (
     <div className="bg-white rounded-lg shadow-sm">
@@ -89,13 +89,13 @@ export const PetSocial = memo(function PetSocial({
         )}
       </div>
 
-      {selectedPostId && (
+      {/* {selectedPostId && (
         <CommentsModal
           postId={selectedPostId}
           onClose={() => setSelectedPostId(null)}
           onCommentAdded={handleComment}
         />
-      )}
+      )} */}
     </div>
   );
 });

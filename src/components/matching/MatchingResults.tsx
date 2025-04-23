@@ -1,14 +1,20 @@
 import React from 'react';
 import { MatchCard } from './MatchCard';
 import type { MatchResult } from '../../types/matching';
+import { MatchingSkeleton } from './MatchingSkeleton.jsx'
 
 interface MatchingResultsProps {
   matches: MatchResult[];
   onLike: (matchId: string) => void;
   onMessage: (matchId: string) => void;
+  loading: boolean
 }
 
-export function MatchingResults({ matches, onLike, onMessage }: MatchingResultsProps) {
+export function MatchingResults({ matches, onLike, onMessage, loading }: MatchingResultsProps) {
+  if (loading) {
+    return <MatchingSkeleton />;
+  }
+
   if (matches.length === 0) {
     return (
       <div className="text-center py-12">

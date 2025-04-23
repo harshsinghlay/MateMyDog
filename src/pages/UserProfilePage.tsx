@@ -66,21 +66,21 @@ export function UserProfilePage() {
           if (data.results?.[0]?.components) {
             const { city, state, country, postcode } =
               data.results[0].components;
-            const {lat , lng} = data.results[0].geometry;
+            const { lat, lng } = data.results[0].geometry;
             setUserInfo((prev) =>
               prev
                 ? {
-                    ...prev,
-                    location: {
-                      id : prev.location.id, 
-                      city: city || "",
-                      state: state || "",
-                      country: country || "",
-                      postalCode: postcode || "",
-                      lat: lat || "",
-                      lng: lng || "",
-                    },
-                  }
+                  ...prev,
+                  location: {
+                    id: prev.location.id,
+                    city: city || "",
+                    state: state || "",
+                    country: country || "",
+                    postalCode: postcode || "",
+                    lat: lat || "",
+                    lng: lng || "",
+                  },
+                }
                 : null
             );
           }
@@ -123,7 +123,7 @@ export function UserProfilePage() {
       email: userInfo.email,
       avatarUrl: userInfo.avatarUrl,
       location: userInfo.location,
-      isActive : userInfo.isActive
+      isActive: userInfo.isActive
     };
 
     await updateUser(user.id, updateData);
@@ -146,9 +146,9 @@ export function UserProfilePage() {
       setUserInfo((prev) =>
         prev
           ? {
-              ...prev,
-              avatarUrl: media.url,
-            }
+            ...prev,
+            avatarUrl: media.url,
+          }
           : null
       );
     } catch (error) {
@@ -179,61 +179,61 @@ export function UserProfilePage() {
       <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="p-6 space-y-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-8">
-              <div className="relative">
-                <div className="h-32 w-32 rounded-full overflow-hidden">
-                  {uploading ? (
-                    <div className="h-full w-full bg-gray-100 flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-                    </div>
-                  ) : userInfo.avatarUrl ? (
-                    <img
-                      src={userInfo.avatarUrl}
-                      alt="Profile"
-                      className="h-full w-full object-cover"
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-8">
+                <div className="relative">
+                  <div className="h-32 w-32 rounded-full overflow-hidden">
+                    {uploading ? (
+                      <div className="h-full w-full bg-gray-100 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                      </div>
+                    ) : userInfo.avatarUrl ? (
+                      <img
+                        src={userInfo.avatarUrl}
+                        alt="Profile"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-gray-100 flex items-center justify-center">
+                        <UserCircle className="h-16 w-16 text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+
+                  <label className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md cursor-pointer hover:bg-gray-50">
+                    <Camera className="h-5 w-5 text-gray-600" />
+                    <input
+                      type="file"
+                      accept={allowedTypes.join(",")}
+                      onChange={handleImageUpload}
+                      className="hidden"
                     />
-                  ) : (
-                    <div className="h-full w-full bg-gray-100 flex items-center justify-center">
-                      <UserCircle className="h-16 w-16 text-gray-400" />
-                    </div>
-                  )}
+                  </label>
                 </div>
-
-                <label className="absolute bottom-0 right-0 bg-white rounded-full p-2 shadow-md cursor-pointer hover:bg-gray-50">
-                  <Camera className="h-5 w-5 text-gray-600" />
-                  <input
-                    type="file"
-                    accept={allowedTypes.join(",")}
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
+                <div className="hidden md:block">
+                  <h1 className="text-2xl font-serif font-semibold text-gray-900">
+                    {userInfo.fullName || "Your Profile"}
+                  </h1>
+                  <p className="text-gray-500">{userInfo.email}</p>
+                </div>
               </div>
-              <div className="hidden md:block">
-                <h1 className="text-2xl font-serif font-semibold text-gray-900">
-                  {userInfo.fullName || "Your Profile"}
-                </h1>
-                <p className="text-gray-500">{userInfo.email}</p>
-              </div>
-            </div>
 
-             {/* Active Status Toggle */}
-               <button
-                onClick={() => handleActiveStatusChange(!activeStatus)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-colors ${
-                  activeStatus
-                    ? "bg-green-100 text-green-700"
-                    : "bg-gray-100 text-gray-700"
-                }`}
-              >
-                <Power className={`h-4 w-4 ${activeStatus ? "text-green-600" : "text-gray-500"}`} />
-                <span className="text-sm font-medium">
+              {/* Active Status Toggle */}
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={activeStatus}
+                  onChange={(e) => handleActiveStatusChange(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <span className="ml-3 text-sm font-medium text-gray-900">
                   {activeStatus ? "Active" : "Inactive"}
                 </span>
-              </button>
+              </label>
 
-              </div>
+
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
@@ -292,12 +292,12 @@ export function UserProfilePage() {
                         setUserInfo((prev) =>
                           prev
                             ? {
-                                ...prev,
-                                location: {
-                                  ...(prev.location || {}),
-                                  city: e.target.value,
-                                },
-                              }
+                              ...prev,
+                              location: {
+                                ...(prev.location || {}),
+                                city: e.target.value,
+                              },
+                            }
                             : null
                         )
                       }
@@ -317,12 +317,12 @@ export function UserProfilePage() {
                         setUserInfo((prev) =>
                           prev
                             ? {
-                                ...prev,
-                                location: {
-                                  ...(prev.location || {}),
-                                  state: e.target.value,
-                                },
-                              }
+                              ...prev,
+                              location: {
+                                ...(prev.location || {}),
+                                state: e.target.value,
+                              },
+                            }
                             : null
                         )
                       }
@@ -342,12 +342,12 @@ export function UserProfilePage() {
                         setUserInfo((prev) =>
                           prev
                             ? {
-                                ...prev,
-                                location: {
-                                  ...(prev.location || {}),
-                                  country: e.target.value,
-                                },
-                              }
+                              ...prev,
+                              location: {
+                                ...(prev.location || {}),
+                                country: e.target.value,
+                              },
+                            }
                             : null
                         )
                       }
@@ -367,12 +367,12 @@ export function UserProfilePage() {
                         setUserInfo((prev) =>
                           prev
                             ? {
-                                ...prev,
-                                location: {
-                                  ...(prev.location || {}),
-                                  postalCode: e.target.value,
-                                },
-                              }
+                              ...prev,
+                              location: {
+                                ...(prev.location || {}),
+                                postalCode: e.target.value,
+                              },
+                            }
                             : null
                         )
                       }

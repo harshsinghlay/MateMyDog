@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, Upload, MapPin } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "../../context/AuthContext";
@@ -22,6 +22,7 @@ export function CreatePostModal({ onClose, onSuccess }: CreatePostModalProps) {
   const [image, setImage] = useState<File | null>(null);
   const [storyText, setStoryText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -61,7 +62,8 @@ export function CreatePostModal({ onClose, onSuccess }: CreatePostModalProps) {
         imageUrl: media.url,
         storyText,
         hashtags: hashtags.map((tag) => tag.substring(1)), // Remove # from hashtags
-        location: selectedPet.location,
+        // location: selectedPet?.owner.location || null
+        owner : selectedPet?.owner.id
       });
 
       toast.success("Post created successfully!");
@@ -163,11 +165,11 @@ export function CreatePostModal({ onClose, onSuccess }: CreatePostModalProps) {
             </div>
 
             {/* Location Preview */}
-            {selectedPet && (
+            {selectedPet?.owner.location.city && (
               <div className="flex items-start space-x-2 text-sm text-gray-500">
                 <MapPin className="h-5 w-5 flex-shrink-0" />
                 <span>
-                  {selectedPet.location.city}, {selectedPet.location.state}
+                  {selectedPet?.owner.location.city || ""}, {selectedPet?.owner.location.state || ""}
                 </span>
               </div>
             )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Heart, MapPin, Award, Clock } from 'lucide-react';
 import type { MatchResult } from '../../types/matching';
+import { UserAvatar } from '../ui/UserAvatar';
 
 interface MatchCardProps {
   match: MatchResult;
@@ -21,7 +22,7 @@ export function MatchCard({ match, onLike, onMessage }: MatchCardProps) {
           <Heart className="h-4 w-4 text-rose-500" />
           <span className="text-sm font-medium">{match.matchScore}%</span>
         </div>
-        {match.verified && (
+        {match.isVerified && (
           <div className="absolute top-4 left-4 bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center">
             <Award className="h-3 w-3 mr-1" />
             Verified
@@ -34,14 +35,11 @@ export function MatchCard({ match, onLike, onMessage }: MatchCardProps) {
           <div>
             <h3 className="text-lg font-medium text-gray-900">{match.name}</h3>
             <p className="text-sm text-gray-500">
-              {match.breed} • {match.age} years
+              {match.breed} • {match.age} 
             </p>
           </div>
-          <img
-            src={match.ownerImageUrl}
-            alt={match.ownerName}
-            className="h-10 w-10 rounded-full border-2 border-white shadow-sm"
-          />
+          
+           <UserAvatar user={match.owner} />  
         </div>
 
         <div className="space-y-2 mb-4">

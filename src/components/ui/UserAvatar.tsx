@@ -21,9 +21,7 @@ export function UserAvatar({ user, size = "md" }: UserAvatarProps) {
       {user.avatarUrl ? (
         <img className="h-full w-full" src={user?.avatarUrl} alt="" />
       ) : (
-        // <div className="h-full w-full bg-gray-100 flex items-center justify-center">
         <UserCircle className="text-black" />
-        // </div>
       )}
     </div>
   );

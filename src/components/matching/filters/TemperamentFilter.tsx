@@ -6,16 +6,16 @@ interface TemperamentFilterProps {
 }
 
 const temperaments = [
-  'Friendly',
-  'Playful',
-  'Calm',
-  'Energetic',
-  'Social',
-  'Independent',
-  'Gentle',
-  'Protective',
-  'Intelligent',
-  'Affectionate'
+  "Friendly",
+  "Playful",
+  "Calm",
+  "Energetic",
+  "Social",
+  "Independent",
+  "Gentle",
+  "Protective",
+  "Intelligent",
+  "Affectionate"
 ];
 
 export function TemperamentFilter({ value, onChange }: TemperamentFilterProps) {

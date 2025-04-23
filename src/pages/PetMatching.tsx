@@ -6,17 +6,18 @@ import { useMatching } from "../hooks/useMatching";
 import type { MatchingFilters as FilterType } from "../types/matching";
 
 export function PetMatching() {
-  const [filters, setFilters] = useState<FilterType>({
-    breed: "",
-    gender: "",
-    ageRange: [0, 15],
-    distance: 50,
-    healthChecked: false,
-    vaccinated: false,
-    temperament: [],
-    purpose: "breeding",
-    availability: "available",
-  });
+    const [filters, setFilters] = useState<FilterType>({
+      selectedPetId: undefined,
+      breed: '',
+      gender: '',
+      ageRange: {min : "", max : ""},
+      distance: 50,
+      healthChecked: false,
+      vaccinated: false,
+      temperament: [],
+      purpose: 'breeding',
+      availability: 'available',
+    });
 
   const { matches, loading, error } = useMatching(filters);
 
@@ -41,22 +42,13 @@ export function PetMatching() {
           </aside>
 
           <main className="mt-6 lg:mt-0 lg:col-span-9">
-            {loading ? (
-              <div className="text-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-                <p className="mt-4 text-gray-500">Finding perfect matches...</p>
-              </div>
-            ) : error ? (
-              <div className="text-center py-12 text-red-600">
-                {error.message}
-              </div>
-            ) : (
               <MatchingResults
                 matches={matches}
                 onLike={handleLike}
                 onMessage={handleMessage}
+                loading={loading}
               />
-            )}
+            {/* )} */}
           </main>
         </div>
       </div>

@@ -4,7 +4,7 @@ export interface Pet {
   id: string;
   name: string;
   breed: string;
-  age: number;
+  age: string;
   gender: 'male' | 'female';
   imageUrl: string;
   owner: User;
@@ -14,12 +14,8 @@ export interface Pet {
   temperament: string[];
   medicalHistory: MedicalRecord[];
   vaccinations: Vaccination[];
-  media: PetMedia[];
-  likes: Like[];
-  reviews: Review[];
-  comments: Comment[];
-  rating: number;
   isActive : boolean;
+  isVerified: boolean;
   matchmaking?: {
     enabled: boolean;
     purposes: string[];

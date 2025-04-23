@@ -25,6 +25,8 @@ export function PetList() {
   };
 
   const handleSavePet = async (pet: Pet) => {
+
+    
     try {
       if (!user) {
         toast.error("You must be logged in to add a pet");
@@ -34,6 +36,7 @@ export function PetList() {
       const newPet = {
         ...pet,
       };
+
 
       await petService.addPet(newPet);
       setIsAddingPet(false);

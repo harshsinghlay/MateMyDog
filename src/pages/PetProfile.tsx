@@ -23,9 +23,7 @@ export function PetProfile() {
   const [error, setError] = useState<Error | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
+
 
   const isOwner = user?.id === pet?.owner.id;
 
@@ -37,6 +35,8 @@ export function PetProfile() {
         setLoading(true);
         setError(null);
         const petData = await petService.getPet(id);
+        console.log("Pet is",petData);
+        
         setPet(petData);
       } catch (err) {
         console.error("Error fetching pet:", err);
@@ -64,47 +64,47 @@ export function PetProfile() {
   };
 
 
-  const handleLike = async () => {
-    if (!id || !user) {
-      toast.error("You must be logged in to like a pet");
-      return;
-    }
-    try {
-      const updatedPet = await petService.likePet(
-        id,
-        user.id,
-        user.fullName || "Anonymous"
-      );
-      setPet(updatedPet);
-    } catch (err) {
-      console.error("Error liking pet:", err);
-      toast.error("Failed to like pet");
-    }
-  };
+  // const handleLike = async () => {
+  //   if (!id || !user) {
+  //     toast.error("You must be logged in to like a pet");
+  //     return;
+  //   }
+  //   try {
+  //     const updatedPet = await petService.likePet(
+  //       id,
+  //       user.id,
+  //       user.fullName || "Anonymous"
+  //     );
+  //     setPet(updatedPet);
+  //   } catch (err) {
+  //     console.error("Error liking pet:", err);
+  //     toast.error("Failed to like pet");
+  //   }
+  // };
 
-  const handleReview = async (rating: number, comment: string) => {
+  // const handleReview = async (rating: number, comment: string) => {
      
-  };
+  // };
 
-  const handleComment = async (content: string) => {
-    if (!id || !user) {
-      toast.error("You must be logged in to comment");
-      return;
-    }
-    try {
-      const updatedPet = await petService.postComment(
-        id,
-        user.id,
-        user.fullName || "Anonymous",
-        content
-      );
-      setPet(updatedPet);
-      toast.success("Comment added successfully");
-    } catch (err) {
-      console.error("Error posting comment:", err);
-      toast.error("Failed to add comment");
-    }
-  };
+  // const handleComment = async (content: string) => {
+  //   if (!id || !user) {
+  //     toast.error("You must be logged in to comment");
+  //     return;
+  //   }
+  //   try {
+  //     const updatedPet = await petService.postComment(
+  //       id,
+  //       user.id,
+  //       user.fullName || "Anonymous",
+  //       content
+  //     );
+  //     setPet(updatedPet);
+  //     toast.success("Comment added successfully");
+  //   } catch (err) {
+  //     console.error("Error posting comment:", err);
+  //     toast.error("Failed to add comment");
+  //   }
+  // };
 
   const handleAddMedicalRecord = async (record: Omit<MedicalRecord, "id">) => {
     if (!id) return;
@@ -178,9 +178,9 @@ export function PetProfile() {
                 <TabsContent value="social" className="p-6">
                   <PetSocial
                     pet={pet}
-                    onLike={handleLike}
-                    onReview={handleReview}
-                    onComment={handleComment}
+                    // onLike={handleLike}
+                    // onReview={handleReview}
+                    // onComment={handleComment}
                   />
                 </TabsContent>
 

@@ -1,8 +1,8 @@
-import type { Address } from "./user";
+import type { Address, User } from "./user";
 
 export interface SocialPost {
   id: string;
-  userId: string;
+  // userId: string;
   petId: string;
   petName: string;
   petImageUrl: string;
@@ -34,9 +34,9 @@ export interface PostLike {
 }
 
 export interface CreatePostData {
+  owner: User | String;
   petId: string;
   imageUrl: string;
   storyText: string;
   hashtags: string[];
-  location: Address;
 }

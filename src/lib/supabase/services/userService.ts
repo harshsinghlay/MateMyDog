@@ -74,7 +74,7 @@ class UserService {
       const { error: petsError } = await supabase
         .from('pets')
         .update({ is_active: isActive })
-        .eq('owner_id', userId);
+        .eq('user_id', userId);
 
       if (petsError) throw new Error('Failed to update pets status');
 

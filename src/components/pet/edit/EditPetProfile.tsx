@@ -29,7 +29,6 @@ export function EditPetProfile({
   const [formData, setFormData] = useState<Pet>({
     name: "",
     breed: breeds[0] || "",
-    age: 0,
     gender: "male",
     imageUrl:
       "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
@@ -40,11 +39,6 @@ export function EditPetProfile({
     temperament: [],
     medicalHistory: [],
     vaccinations: [],
-    media: [],
-    likes: [],
-    reviews: [],
-    comments: [],
-    rating: 0,
     isActive : user?.isActive,
     matchmaking : {
       enabled: false,
@@ -59,11 +53,9 @@ export function EditPetProfile({
     const requiredFields: (keyof Pet)[] = [
       "name",
       "breed",
-      "age",
       "gender",
       "imageUrl",
       "dateOfBirth",
-      "weight",
     ];
     const missingFields = requiredFields.filter((field) => !formData[field]);
 
@@ -74,13 +66,13 @@ export function EditPetProfile({
       return false;
     }
 
-    if (formData.age < 1) {
-      toast.error("Age must be greater than 0");
+    if (!formData.dateOfBirth) {
+      toast.error("Age must be greater than 1 day");
       return false;
     }
 
     if (formData.weight < 1) {
-      toast.error("Weight must be greater than 1");
+      toast.error("Weight must be greater than 0");
       return false;
     }
    
@@ -96,7 +88,9 @@ export function EditPetProfile({
 
     try {
       setIsSubmitting(true);
-      await onSave(formData);
+      onSave(formData);
+      // console.log("formdata is",formData);
+      
     } catch (error) {
       console.error("Error saving pet:", error);
       toast.error("Failed to save pet");

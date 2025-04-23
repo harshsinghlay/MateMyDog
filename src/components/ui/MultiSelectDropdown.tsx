@@ -49,7 +49,7 @@ export default function MultiSelectDropdown({
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <div
-        className="mt-1 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white cursor-pointer px-1 py-[4px] flex justify-between items-center "
+        className="mt-1 w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm bg-white cursor-pointer px-1 py-[4px] flex justify-between items-center "
         onClick={() => setIsOpen(!isOpen)}
       >
         <div className="flex flex-wrap gap-1">
