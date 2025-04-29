@@ -177,6 +177,22 @@ export class AuthService {
     }
   }
 
+  async resendVerificationEmail(email: string) {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email,
+      });
+
+      if (error) throw error;
+
+      return { success: true, message: "Verification email resent successfully." };
+    } catch (error) {
+      console.error("Auth service :: resendVerificationEmail :: error", error);
+      throw error;
+    }
+  }
+
 
 }
 

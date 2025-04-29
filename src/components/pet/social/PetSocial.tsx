@@ -9,14 +9,10 @@ import type { SocialPost } from "../../../types/social";
 
 interface PetSocialProps {
   pet: Pet;
-  // onLike: () => Promise<void>;
-  // onReview: (rating: number, comment: string) => Promise<void>;
-  // onComment: (content: string) => Promise<void>;
 }
 
 export const PetSocial = memo(function PetSocial({
   pet,
-  // onComment,
 }: PetSocialProps) {
   const { isAuthenticated } = useAuth();
   const [selectedPostId, setSelectedPostId] = useState<string | null>(null);

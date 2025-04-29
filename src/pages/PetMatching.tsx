@@ -21,10 +21,6 @@ export function PetMatching() {
 
   const { matches, loading, error } = useMatching(filters);
 
-  const handleLike = (matchId: string) => {
-    // In a real app, this would call an API
-    console.log("Liked match:", matchId);
-  };
 
   const handleMessage = (matchId: string) => {
     // In a real app, this would open a chat or messaging interface
@@ -44,11 +40,9 @@ export function PetMatching() {
           <main className="mt-6 lg:mt-0 lg:col-span-9">
               <MatchingResults
                 matches={matches}
-                onLike={handleLike}
                 onMessage={handleMessage}
                 loading={loading}
               />
-            {/* )} */}
           </main>
         </div>
       </div>

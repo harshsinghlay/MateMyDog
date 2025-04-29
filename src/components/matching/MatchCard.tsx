@@ -5,11 +5,10 @@ import { UserAvatar } from '../ui/UserAvatar';
 
 interface MatchCardProps {
   match: MatchResult;
-  onLike: () => void;
   onMessage: () => void;
 }
 
-export function MatchCard({ match, onLike, onMessage }: MatchCardProps) {
+export function MatchCard({ match, onMessage }: MatchCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <div className="relative aspect-square">
@@ -39,7 +38,7 @@ export function MatchCard({ match, onLike, onMessage }: MatchCardProps) {
             </p>
           </div>
           
-           <UserAvatar user={match.owner} />  
+           <UserAvatar img={match.owner.avatarUrl} />  
         </div>
 
         <div className="space-y-2 mb-4">

@@ -1,16 +1,14 @@
-import React from 'react';
 import { MatchCard } from './MatchCard';
 import type { MatchResult } from '../../types/matching';
 import { MatchingSkeleton } from './MatchingSkeleton.jsx'
 
 interface MatchingResultsProps {
   matches: MatchResult[];
-  onLike: (matchId: string) => void;
   onMessage: (matchId: string) => void;
   loading: boolean
 }
 
-export function MatchingResults({ matches, onLike, onMessage, loading }: MatchingResultsProps) {
+export function MatchingResults({ matches , onMessage, loading }: MatchingResultsProps) {
   if (loading) {
     return <MatchingSkeleton />;
   }
@@ -29,7 +27,6 @@ export function MatchingResults({ matches, onLike, onMessage, loading }: Matchin
         <MatchCard
           key={match.id}
           match={match}
-          onLike={() => onLike(match.id)}
           onMessage={() => onMessage(match.id)}
         />
       ))}

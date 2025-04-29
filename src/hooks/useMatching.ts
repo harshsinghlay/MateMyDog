@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import type { MatchingFilters, MatchResult } from '../types/matching';
 import { calculateDistance } from '../utils/locationHelpers';
 import { petService } from '../lib/supabase/services';
+import { matchingService } from '../lib/supabase/services/matchingService';
 
 export function useMatching(filters: MatchingFilters) {
   const [matches, setMatches] = useState<MatchResult[]>([]);
@@ -12,7 +12,10 @@ export function useMatching(filters: MatchingFilters) {
 
   useEffect(() => {
     const fetchMatches = async () => {
-      if (!filters.selectedPetId) return;
+      if (!filters.selectedPetId) {
+        setMatches([]);
+        return
+      };
 
       try {
         setLoading(true);
@@ -21,85 +24,9 @@ export function useMatching(filters: MatchingFilters) {
         // Get the selected pet's details first
         const selectedPet = await petService.getPet(filters.selectedPetId)
 
-        // Fetch potential matches
-        let query = supabase
-          .from('pets')
-          .select(`
-            *,
-            owner:profiles!user_id (
-              id,
-              full_name,
-              email,
-              is_active,
-              location:addresses (
-                id,
-                city,
-                state,
-                country,
-                postal_code,
-                lat,
-                lng
-              )
-            ),medicalHistory:pet_medical_records (
-            id,
-            date,
-            condition,
-            treatment,
-            veterinarian,
-            notes
-          ),vaccinations:pet_vaccinations (
-            id,
-            name,
-            date,
-            next_due_date,
-            administrator,
-            batch_number,
-            manufacturer
-          )  
-          `)
-          .neq('id', filters.selectedPetId)
-          .eq('is_active', true)
+        if (!selectedPet) throw new Error('Selected pet not found');
 
-        // Apply filters
-        if (filters.breed) {
-          query = query.eq('breed', filters.breed);
-        }
-
-        if (filters.gender) {
-          query = query.eq('gender', filters.gender);
-        }
-
-        // Filter by matchmaking enabled status
-        query = query.eq('matchmaking->enabled', true);
-
-        // Filter by matchmaking purpose if specified
-        if (filters.purpose) {
-          // Use ? operator to check if the purposes array contains the value
-          query = query.contains('matchmaking->purposes', `["${filters.purpose}"]`);
-        }
-
-        if (filters.ageRange) {
-          const { min, max } = filters.ageRange;
-        
-          if (min && min.trim() !== '') query = query.gte('date_of_birth', min);
-          if (max && max.trim() !== '') query = query.lte('date_of_birth', max);
-        }
-        
-
-        if (filters.temperament?.length) {
-          const orTemperaments = filters.temperament
-            .map(t => `temperament.cs.["${t}"]`)
-            .join(',');
-          query = query.or(orTemperaments);
-        }
-
-
-        const { data: matches, error: matchError } = await query;
-        console.log("Matches are",matches);
-        
-
-        if (matchError) throw matchError;
-
+        const matches = await matchingService.getMatches(filters);
 
         // Process and filter matches
         const processedMatches = await Promise.all(
@@ -113,7 +40,6 @@ export function useMatching(filters: MatchingFilters) {
               match.owner.location.lat,
               match.owner.location.lng
             );
-
 
             // skip according to healthchecked
             if (filters.healthChecked) {
@@ -188,7 +114,7 @@ export function useMatching(filters: MatchingFilters) {
     };
 
     fetchMatches();
-  }, [filters]);
+  }, [filters , filters.selectedPetId]);
 
   return { matches, loading, error };
 }

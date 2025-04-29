@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { X, Mail, User, Eye, EyeOff, Lock } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -31,7 +32,19 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   if (!isOpen) return null;
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[\W_]).{6,12}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+  // const handleResendVerification = async () => {
+  //   if (!email || resendingEmail) return;
+    
+  //   try {
+  //     const result = await authService.resendVerificationEmail(email);
+  //     toast.success(result.message);
+  //   } catch (err) {
+  //     toast.error("Internal Server Error");
+  //   } finally {
+  //   }
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +63,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
       }
       if (!passwordRegex.test(password)) {
         setError(
-          "Password must be 6-12 characters long, include at least one uppercase letter, one lowercase letter, and one special character."
+          "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character."
         );
         return;
       }
@@ -70,9 +83,13 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         setMessage("Password reset instructions have been sent to your email.");
       }
     } catch (err) {
-      // ✅ Properly prioritize error messages before setting success messages
-      setError(err instanceof Error ? err.message : "An error occurred.");
-      return; // Stop further execution if an error occurs
+      const errorMessage = err instanceof Error ? err.message : "An error occurred.";
+      setError(errorMessage);
+      
+      // Show resend button if email not confirmed
+      if (errorMessage.includes("Email not confirmed")) {
+        setError("Email not confirmed. Please verify your email or click below to resend verification email.");
+      }
     } finally {
       setLoading(false);
     }

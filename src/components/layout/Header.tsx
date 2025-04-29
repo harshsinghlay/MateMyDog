@@ -78,7 +78,7 @@ export function Header() {
             {isAuthenticated && user ? (
               <div className="relative group">
                 <button className="p-2 hover:text-gray-600 flex items-center">
-                  <UserAvatar user={user} size="sm" />
+                  <UserAvatar img={user.avatarUrl} size="sm" />
                 </button>
                 <div className="absolute right-0 w-40 mt-2 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
                   <button

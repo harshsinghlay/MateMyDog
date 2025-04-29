@@ -34,8 +34,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (currentUser) {
           setIsAuthenticated(true);
           const userInfo = await userService.getUserInfo(currentUser.id);
-          console.log("UserInfo is",userInfo);
-          
           setUser({ ...currentUser, ...userInfo });
         }
       } catch (error) {

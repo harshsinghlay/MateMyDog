@@ -25,11 +25,6 @@ export function PetProfile({ pet, isOwner }: PetProfileProps) {
         <div className="lg:col-span-2">
           <PetSocial
             pet={pet}
-            onLike={async () => {}}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onReview={async (rating: number, comment: string) => {}}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onComment={async (content: string) => {}}
           />
         </div>
       </div>
