@@ -1,11 +1,14 @@
-import { useState } from "react";
-import { UserCircle2, Menu, X } from "lucide-react";
+import { useState , useEffect} from "react";
+import { UserCircle2, Menu, X , Bell} from "lucide-react";
 import { Logo } from "../ui/Logo";
 import { NavLink } from "../ui/NavLink";
 import { AuthModal } from "../auth/AuthModal";
 import { UserAvatar } from "../ui/UserAvatar";
+import { NotificationPanel } from "../notifications/NotifcationPanel";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { notificationService } from "../../lib/supabase/services/notifcationService";
+import type { Notification } from "../../types/message";
 
 // External URLs
 const EXTERNAL_URLS = {
@@ -17,17 +20,50 @@ const EXTERNAL_URLS = {
 export function Header() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const { isAuthenticated, user, signOut } = useAuth();
   const navigate = useNavigate();
 
   const navItems = [
     { label: "Home", href: "/" },
-    { label: "Products", href: EXTERNAL_URLS.products, isExternal: true },
+    // { label: "Products", href: "EXTERNAL_URLS.products", isExternal: true },
+    { label: "Products", href: "/" , isExternal: false},
     { label: "Pet Matching", href: "/matching" },
     { label: "Pets", href: "/pets" },
-    { label: "Blog", href: EXTERNAL_URLS.blog, isExternal: true },
-    { label: "Contact", href: EXTERNAL_URLS.contact, isExternal: true },
+    // { label: "Blog", href: EXTERNAL_URLS.blog, isExternal: true },
+    { label: "Blog", href: "" , isExternal: false },
+    // { label: "Contact", href: EXTERNAL_URLS.contact, isExternal: true },
+    { label: "Contact", href:"" , isExternal: false},
   ];
+
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const loadNotifications = async () => {
+      try {
+        const data = await notificationService.getNotifications();
+        setNotifications(data);
+        setUnreadCount(data.filter(n => !n.read).length);
+      } catch (error) {
+        console.error('Error loading notifications:', error);
+      }
+    };
+
+    loadNotifications();
+
+    // Subscribe to new notifications
+    const subscription = notificationService.subscribeToNotifications(user.id, (notification) => {
+      setNotifications(prev => [notification, ...prev]);
+      setUnreadCount(prev => prev + 1);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [user?.id]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -76,6 +112,26 @@ export function Header() {
           {/* Desktop Auth/Profile */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated && user ? (
+               <>
+               <div className="relative">
+                  <button
+                    onClick={() => setShowNotifications(!showNotifications)}
+                    className="p-2 hover:text-gray-600 relative"
+                  >
+                    <Bell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                        {unreadCount}
+                      </span>
+                    )}
+                  </button>
+                  {showNotifications && (
+                    <NotificationPanel
+                      notifications={notifications}
+                      onClose={() => setShowNotifications(false)}
+                    />
+                  )}
+                </div>
               <div className="relative group">
                 <button className="p-2 hover:text-gray-600 flex items-center">
                   <UserAvatar img={user.avatarUrl} size="sm" />
@@ -88,6 +144,12 @@ export function Header() {
                     Profile
                   </button>
                   <button
+                      onClick={() => navigate("/chats")}
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    >
+                      Messages
+                    </button>
+                  <button
                     onClick={handleSignOut}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-b-lg"
                   >
@@ -95,6 +157,7 @@ export function Header() {
                   </button>
                 </div>
               </div>
+               </>
             ) : (
               <button
                 onClick={() => setIsAuthModalOpen(true)}
@@ -138,6 +201,15 @@ export function Header() {
                   className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md"
                 >
                   Profile
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/chats");
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md"
+                >
+                  Messages
                 </button>
                 <button
                   onClick={handleSignOut}

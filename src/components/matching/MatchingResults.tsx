@@ -4,7 +4,7 @@ import { MatchingSkeleton } from './MatchingSkeleton.jsx'
 
 interface MatchingResultsProps {
   matches: MatchResult[];
-  onMessage: (matchId: string) => void;
+  onMessage: (userId: string) => void;
   loading: boolean
 }
 
@@ -27,7 +27,7 @@ export function MatchingResults({ matches , onMessage, loading }: MatchingResult
         <MatchCard
           key={match.id}
           match={match}
-          onMessage={() => onMessage(match.id)}
+          onMessage={() => onMessage(match.owner.id)}
         />
       ))}
     </div>

@@ -6,7 +6,8 @@ export function Logo() {
   return (
     <Link to="/" className="flex items-center space-x-2">
       <Dog className="h-8 w-8" />
-      <span className="text-xl font-serif">Tilting Heads</span>
+      {/* <span className="text-xl font-serif">Tilting Heads</span> */}
+      <span className="text-xl font-serif">MateMyDog</span>
     </Link>
   );
 }

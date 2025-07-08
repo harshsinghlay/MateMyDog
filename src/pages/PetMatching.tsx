@@ -4,6 +4,9 @@ import { MatchingFilters } from "../components/matching/MatchingFilters";
 import { MatchingResults } from "../components/matching/MatchingResults";
 import { useMatching } from "../hooks/useMatching";
 import type { MatchingFilters as FilterType } from "../types/matching";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import toast from "react-hot-toast";
 
 export function PetMatching() {
     const [filters, setFilters] = useState<FilterType>({
@@ -20,12 +23,18 @@ export function PetMatching() {
     });
 
   const { matches, loading, error } = useMatching(filters);
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
 
-  const handleMessage = (matchId: string) => {
-    // In a real app, this would open a chat or messaging interface
-    console.log("Messaging match:", matchId);
+  const handleMessage = (userId : string) => {
+    if (!isAuthenticated) {
+      toast("Please sign in to send messages", { icon: "🔒" });
+      return;
+    }
+    navigate('/chats', { state: { userId } });
   };
+
 
   return (
     <div className=" bg-gray-50 pb-16 md:pb-0">

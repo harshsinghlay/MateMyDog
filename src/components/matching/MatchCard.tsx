@@ -9,6 +9,7 @@ interface MatchCardProps {
 }
 
 export function MatchCard({ match, onMessage }: MatchCardProps) {
+
   return (
     <div className="bg-white rounded-lg shadow-sm overflow-hidden">
       <div className="relative aspect-square">

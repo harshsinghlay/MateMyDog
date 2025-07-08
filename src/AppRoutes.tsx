@@ -9,6 +9,7 @@ import { UpdatePassword } from "./pages/UpdatePassword";
 import { SharedPostPage } from "./pages/SharedPostPage";
 import { PrivateRoute } from "./components/auth/PrivateRoute";
 import { SocialFeed } from "./components/social/SocialFeed";
+import { ChatPage } from "./components/chat/ChatPage";
 
 export function AppRoutes() {
   return (
@@ -22,6 +23,14 @@ export function AppRoutes() {
         element={
           <PrivateRoute>
             <UserProfilePage />
+          </PrivateRoute>
+        }
+      />
+       <Route
+        path="/chats"
+        element={
+          <PrivateRoute>
+            <ChatPage />
           </PrivateRoute>
         }
       />

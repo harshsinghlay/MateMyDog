@@ -36,6 +36,37 @@ class UserService {
     }
   }
 
+  async getAllUsers(): Promise<User[]> {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*, address:addresses!location(*)")
+        .order("full_name", { ascending: true });
+
+      if (error) throw error;
+
+      return (data || []).map(user => ({
+        id: user.id,
+        fullName: user.full_name,
+        email: user.email,
+        avatarUrl: user.avatar_url,
+        isActive: user.is_active,
+        location: {
+          id: user.address?.id,
+          city: user.address?.city || "",
+          state: user.address?.state || "",
+          country: user.address?.country || "",
+          postalCode: user.address?.postal_code || "",
+          lat: user.address?.lat || "",
+          lng: user.address?.lng || "",
+        }
+      }));
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      throw error;
+    }
+  }
+
   async updateUserInfo(userId: string, info: User): Promise<void> {
     try {
 
@@ -151,6 +182,8 @@ class UserService {
       throw error;
     }
   }
+
+
 
 }
 
